@@ -179,7 +179,7 @@ SELECT
         WHEN COUNT(DISTINCT o.order_id) = 1 THEN 'Single Purchase'
         ELSE 'Repeat Customer'
     END as customer_status
-FROM `cedar-router-470112-r3.amazon_sales_analysis.customers` c
+FROM `your-project-id.amazon_sales_analysis.customers` c
 LEFT JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
 LEFT JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
 GROUP BY c.customer_name, c.email, c.registration_date, o.customer_id
@@ -201,6 +201,29 @@ RIGHT JOIN `your-project-id.amazon_sales_analysis.products` p ON s.product_id = 
 GROUP BY p.product_name, p.category, p.list_price
 ORDER BY total_revenue DESC;
 ```
+
+### Complete Order Details (FULL OUTER JOIN)
+**Purpose: Comprehensive view of all orders and potential data gaps**
+```sql
+SELECT 
+    COALESCE(o.order_id, s.order_id) as order_id,
+    c.customer_name,
+    o.order_date,
+    p.product_name,
+    s.quantity,
+    s.unit_price,
+    s.sales_amount,
+    CASE 
+        WHEN o.order_id IS NULL THEN 'Missing Order Info'
+        WHEN s.order_id IS NULL THEN 'Missing Sales Info'
+        ELSE 'Complete'
+    END as data_quality
+FROM `your-project-id.amazon_sales_analysis.orders` o
+FULL OUTER JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+LEFT JOIN `your-project-id.amazon_sales_analysis.customers` c ON o.customer_id = c.Custkey
+LEFT JOIN `your-project-id.amazon_sales_analysis.products` p ON s.product_id = p.product_id
+WHERE COALESCE(o.order_id, s.order_id) IS NOT NULL
+ORDER BY COALESCE(o.order_date, '1900-01-01') DESC;
 
 
 
