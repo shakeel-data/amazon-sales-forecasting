@@ -28,4 +28,21 @@ This comprehensive data analytics project demonstrates end-to-end skills in data
 - Data Visualization & Storytelling
 
 ## 📊 Project Workflow
+Data Ingestion → Data Cleaning → EDA → Database Design → SQL Analysis → ML Modeling → Business Insights
+↓ ↓ ↓ ↓ ↓ ↓ ↓
+Raw CSV Clean Data 7+ Charts Normalized 20+ Queries 3 ML Models Segments
 
+
+## 🗂️ Project Structure
+amazon-sales-forecasting/
+├── notebooks/
+│ ├── 01_data_exploration_cleaning.ipynb # Data cleaning & EDA
+│ ├── 02_sql_analysis_bigquery.ipynb # SQL queries & analysis
+│ ├── 03_machine_learning_forecasting.ipynb # ML models & forecasting
+│ └── 04_customer_segmentation.ipynb # K-means clustering
+├── data/
+│ ├── raw/amazon_foodcategory_sales.csv # Original dataset
+│ └── processed/ # Cleaned & normalized data
+├── sql/queries.sql # All SQL queries
+├── README.md # This file
+└── requirements.txt # Python dependencies
