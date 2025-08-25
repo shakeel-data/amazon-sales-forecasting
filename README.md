@@ -520,45 +520,174 @@ ORDER BY total_sales DESC;
 ```
 
 
+## Business Intelligence Queries
+### Customer Lifetime Value Prediction
+**Purpose: Estimate future customer value**
+```sql
+WITH customer_behavior AS (
+    SELECT 
+        c.Custkey,
+        c.customer_name,
+        c.registration_date,
+        COUNT(DISTINCT o.order_id) as total_orders,
+        ROUND(SUM(s.sales_amount), 2) as total_spent,
+        ROUND(AVG(s.sales_amount), 2) as avg_order_value,
+        DATE_DIFF(MAX(o.order_date), MIN(o.order_date), DAY) + 1 as customer_lifespan_days,
+        DATE_DIFF(CURRENT_DATE(), MAX(o.order_date), DAY) as days_since_last_order
+    FROM `your-project-id.amazon_sales_analysis.customers` c
+    JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    GROUP BY c.Custkey, c.customer_name, c.registration_date
+)
+SELECT 
+    customer_name,
+    total_orders,
+    total_spent,
+    avg_order_value,
+    customer_lifespan_days,
+    -- Calculate purchase frequency
+    CASE 
+        WHEN customer_lifespan_days > 0 THEN 
+            ROUND(total_orders / (customer_lifespan_days / 365.0), 2)
+        ELSE 0 
+    END as orders_per_year,
+    -- Estimated CLV (simplified)
+    CASE 
+        WHEN customer_lifespan_days > 0 THEN 
+            ROUND(avg_order_value * (total_orders / (customer_lifespan_days / 365.0)) * 2, 2)
+        ELSE avg_order_value 
+    END as estimated_2year_clv,
+    -- Customer status
+    CASE 
+        WHEN days_since_last_order <= 30 THEN 'Active'
+        WHEN days_since_last_order <= 90 THEN 'At Risk'
+        ELSE 'Churned'
+    END as customer_status
+FROM customer_behavior
+ORDER BY estimated_2year_clv DESC;
+```
+
+### Seasonal Sales Patterns
+**Purpose: Identify seasonal trends in sales**
+```sql
+SELECT 
+    EXTRACT(MONTH FROM o.order_date) as month,
+    FORMAT_DATE('%B', DATE(2024, EXTRACT(MONTH FROM o.order_date), 1)) as month_name,
+    COUNT(DISTINCT o.order_id) as total_orders,
+    ROUND(SUM(s.sales_amount), 2) as total_revenue,
+    ROUND(AVG(s.sales_amount), 2) as avg_order_value,
+    -- Compare to annual average
+    ROUND(
+        (SUM(s.sales_amount) - AVG(SUM(s.sales_amount)) OVER ()) / 
+        AVG(SUM(s.sales_amount)) OVER () * 100, 2
+    ) as variance_from_avg_percent
+FROM `your-project-id.amazon_sales_analysis.orders` o
+JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+GROUP BY month, month_name
+ORDER BY month;
+```
+
+### Product Cross-Selling Analysis
+**Purpose: Find products frequently bought together**
+```sql
+WITH order_products AS (
+    SELECT 
+        s1.order_id,
+        s1.product_id as product_a,
+        s2.product_id as product_b
+    FROM `your-project-id.amazon_sales_analysis.sales` s1
+    JOIN `your-project-id.amazon_sales_analysis.sales` s2 
+        ON s1.order_id = s2.order_id 
+        AND s1.product_id < s2.product_id  -- Avoid duplicates
+),
+product_pairs AS (
+    SELECT 
+        product_a,
+        product_b,
+        COUNT(*) as times_bought_together
+    FROM order_products
+    GROUP BY product_a, product_b
+    HAVING COUNT(*) >= 2  -- At least bought together twice
+)
+SELECT 
+    pa.product_name as product_a_name,
+    pb.product_name as product_b_name,
+    pp.times_bought_together,
+    -- Calculate support (percentage of orders containing both items)
+    ROUND(
+        pp.times_bought_together / 
+        (SELECT COUNT(DISTINCT order_id) FROM `cedar-router-470112-r3.amazon_sales_analysis.sales`) * 100, 2
+    ) as support_percent
+FROM product_pairs pp
+JOIN `your-project-id.amazon_sales_analysis.products` pa ON pp.product_a = pa.product_id
+JOIN `your-project-id.amazon_sales_analysis.products` pb ON pp.product_b = pb.product_id
+ORDER BY times_bought_together DESC
+LIMIT 20;
+```
 
 
+### Revenue Forecast Base Data
+**Purpose: Prepare data for revenue forecasting**
+```sql
+WITH daily_sales AS (
+    SELECT 
+        o.order_date,
+        COUNT(DISTINCT o.order_id) as orders,
+        ROUND(SUM(s.sales_amount), 2) as revenue,
+        COUNT(DISTINCT o.customer_id) as unique_customers
+    FROM `your-project-id.amazon_sales_analysis.orders` o
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    GROUP BY o.order_date
+)
+SELECT 
+    order_date,
+    orders,
+    revenue,
+    unique_customers,
+    -- 7-day moving averages for trend analysis
+    ROUND(AVG(orders) OVER (
+        ORDER BY order_date 
+        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+    ), 2) as orders_7day_avg,
+    ROUND(AVG(revenue) OVER (
+        ORDER BY order_date 
+        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+    ), 2) as revenue_7day_avg,
+    -- Week-over-week growth
+    ROUND(
+        (revenue - LAG(revenue, 7) OVER (ORDER BY order_date)) / 
+        LAG(revenue, 7) OVER (ORDER BY order_date) * 100, 2
+    ) as wow_growth_percent
+FROM daily_sales
+ORDER BY order_date DESC;
+```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### Executive Dashboard Summary
+**Purpose: Key metrics for executive reporting**
+```sql
+WITH summary_stats AS (
+    SELECT 
+        COUNT(DISTINCT c.Custkey) as total_customers,
+        COUNT(DISTINCT p.product_id) as total_products,
+        COUNT(DISTINCT o.order_id) as total_orders,
+        ROUND(SUM(s.sales_amount), 2) as total_revenue,
+        ROUND(AVG(s.sales_amount), 2) as avg_order_value,
+        COUNT(DISTINCT o.sales_rep) as active_sales_reps
+    FROM `your-project-id.amazon_sales_analysis.customers` c
+    CROSS JOIN `your-project-id.amazon_sales_analysis.products` p
+    LEFT JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+    LEFT JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+)
+SELECT 
+    'Total Customers' as metric, CAST(total_customers as STRING) as value
+FROM summary_stats
+UNION ALL SELECT 'Total Products', CAST(total_products as STRING) FROM summary_stats
+UNION ALL SELECT 'Total Orders', CAST(total_orders as STRING) FROM summary_stats  
+UNION ALL SELECT 'Total Revenue', CONCAT('$', CAST(total_revenue as STRING)) FROM summary_stats
+UNION ALL SELECT 'Average Order Value', CONCAT('$', CAST(avg_order_value as STRING)) FROM summary_stats
+UNION ALL SELECT 'Active Sales Reps', CAST(active_sales_reps as STRING) FROM summary_stats;
+```
 
 
 ## 🤖 Machine Learning Models
