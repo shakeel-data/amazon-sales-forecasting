@@ -93,97 +93,40 @@ The initial flat CSV was normalized into a relational star schema to improve que
 ## ⚙️ SQL Analysis Showcase
 
 This project features over 20 advanced SQL queries. Below are key highlights:
-
-### 1. Monthly Sales Growth (CTE & Window Function)
-
+-- Customer Overview
+-- Purpose: Basic customer information with aggregated metrics
 ```sql
-WITH monthly_sales AS (
-SELECT
-EXTRACT(YEAR FROM o.order_date) AS sales_year,
-EXTRACT(MONTH FROM o.order_date) AS sales_month,
-ROUND(SUM(s.sales_amount), 2) AS total_sales
-FROM project.dataset.orders o
-JOIN project.dataset.sales s ON o.order_id = s.order_id
-GROUP BY 1, 2
-),
-sales_with_lag AS (
-SELECT
-sales_year,
-sales_month,
-total_sales,
-LAG(total_sales, 1, 0) OVER (ORDER BY sales_year, sales_month) AS previous_month_sales
-FROM monthly_sales
-)
-SELECT
-sales_year,
-sales_month,
-total_sales,
-ROUND(((total_sales - previous_month_sales) / NULLIF(previous_month_sales, 0)) * 100, 2) AS growth_rate_pct
-FROM sales_with_lag
-ORDER BY 1, 2;
+SELECT 
+    customer_name,
+    email,
+    phone,
+    registration_date,
+    -- Calculate days since registration
+    DATE_DIFF(CURRENT_DATE(), registration_date, DAY) as days_as_customer
+FROM `your-project-id.amazon_sales_analysis.customers`
+ORDER BY registration_date DESC
+LIMIT 10;
 ```
 
-
-### 2. Customer RFM Segmentation (Advanced CTEs)
+-- Product Catalog Summary
+-- Purpose: Overview of products with pricing information
 ```sql
-WITH customer_metrics AS (
-SELECT
-c.customer_id,
-c.customer_name,
-DATE_DIFF(CURRENT_DATE(), MAX(o.order_date), DAY) as recency,
-COUNT(DISTINCT o.order_id) as frequency,
-ROUND(SUM(s.sales_amount), 2) as monetary_value
-FROM project.dataset.customers c
-JOIN project.dataset.orders o ON c.customer_id = o.customer_id
-JOIN project.dataset.sales s ON o.order_id = s.order_id
-GROUP BY 1, 2
-),
-rfm_scores AS (
-SELECT
-*,
-NTILE(5) OVER (ORDER BY recency DESC) as r_score,
-NTILE(5) OVER (ORDER BY frequency ASC) as f_score,
-NTILE(5) OVER (ORDER BY monetary_value ASC) as m_score
-FROM customer_metrics
-)
-SELECT
-customer_name,
-recency,
-frequency,
-monetary_value,
-CONCAT(r_score, f_score, m_score) AS rfm_segment
-FROM rfm_scores
-ORDER BY monetary_value DESC;
+SELECT 
+    category,
+    product_name,
+    list_price,
+    unit_measure,
+    -- Price categories for analysis
+    CASE 
+        WHEN list_price < 50 THEN 'Budget'
+        WHEN list_price BETWEEN 50 AND 200 THEN 'Mid-Range'
+        WHEN list_price > 200 THEN 'Premium'
+        ELSE 'Unknown'
+    END as price_category
+FROM `your-project-id.amazon_sales_analysis.products`
+WHERE list_price IS NOT NULL
+ORDER BY list_price DESC;
 ```
-
-
-### 3. Top Products per Category (Window Function)
-```sql
-WITH product_sales AS (
-SELECT
-p.product_name,
-p.category,
-SUM(s.sales_amount) AS total_sales
-FROM project.dataset.products p
-JOIN project.dataset.sales s ON p.product_id = s.product_id
-GROUP BY 1, 2
-),
-ranked_sales AS (
-SELECT
-product_name,
-category,
-total_sales,
-ROW_NUMBER() OVER (PARTITION BY category ORDER BY total_sales DESC) AS rank_num
-FROM product_sales
-)
-SELECT
-product_name,
-category,
-ROUND(total_sales, 2) AS total_sales
-FROM ranked_sales
-WHERE rank_num <= 3;
-```
-
 
 ## 🤖 Machine Learning Models
 
