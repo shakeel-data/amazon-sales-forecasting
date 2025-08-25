@@ -616,7 +616,7 @@ SELECT
     -- Calculate support (percentage of orders containing both items)
     ROUND(
         pp.times_bought_together / 
-        (SELECT COUNT(DISTINCT order_id) FROM `cedar-router-470112-r3.amazon_sales_analysis.sales`) * 100, 2
+        (SELECT COUNT(DISTINCT order_id) FROM `your-project-id.amazon_sales_analysis.sales`) * 100, 2
     ) as support_percent
 FROM product_pairs pp
 JOIN `your-project-id.amazon_sales_analysis.products` pa ON pp.product_a = pa.product_id
