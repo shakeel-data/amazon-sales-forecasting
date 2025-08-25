@@ -224,17 +224,200 @@ LEFT JOIN `your-project-id.amazon_sales_analysis.customers` c ON o.customer_id =
 LEFT JOIN `your-project-id.amazon_sales_analysis.products` p ON s.product_id = p.product_id
 WHERE COALESCE(o.order_id, s.order_id) IS NOT NULL
 ORDER BY COALESCE(o.order_date, '1900-01-01') DESC;
+```
 
+## Window Functions
+### Customer Ranking by Revenue
+**Purpose: Rank customers and show revenue percentiles**
+```sql
+SELECT 
+    c.customer_name,
+    ROUND(SUM(s.sales_amount), 2) as total_revenue,
+    -- Ranking functions
+    ROW_NUMBER() OVER (ORDER BY SUM(s.sales_amount) DESC) as revenue_rank,
+    DENSE_RANK() OVER (ORDER BY SUM(s.sales_amount) DESC) as dense_rank,
+    -- Percentile calculation
+    PERCENT_RANK() OVER (ORDER BY SUM(s.sales_amount)) as revenue_percentile,
+    -- Revenue quartiles
+    NTILE(4) OVER (ORDER BY SUM(s.sales_amount)) as revenue_quartile
+FROM `your-project-id.amazon_sales_analysis.customers` c
+JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+GROUP BY c.customer_name
+ORDER BY total_revenue DESC;
+```
 
+### Running Totals and Moving Averages
+**Purpose: Calculate cumulative sales and trends**
+```sql
+SELECT 
+    order_date,
+    COUNT(DISTINCT order_id) as daily_orders,
+    ROUND(SUM(daily_revenue), 2) as daily_revenue,
+    -- Running totals
+    SUM(COUNT(DISTINCT order_id)) OVER (
+        ORDER BY order_date 
+        ROWS UNBOUNDED PRECEDING
+    ) as cumulative_orders,
+    SUM(SUM(daily_revenue)) OVER (
+        ORDER BY order_date 
+        ROWS UNBOUNDED PRECEDING
+    ) as cumulative_revenue,
+    -- 7-day moving average
+    ROUND(AVG(SUM(daily_revenue)) OVER (
+        ORDER BY order_date 
+        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+    ), 2) as revenue_7day_avg
+FROM (
+    SELECT 
+        o.order_date,
+        o.order_id,
+        SUM(s.sales_amount) as daily_revenue
+    FROM `your-project-id.amazon_sales_analysis.orders` o
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    GROUP BY o.order_date, o.order_id
+) daily_data
+GROUP BY order_date
+ORDER BY order_date;
+```
 
+### Product Sales Comparison
+**Purpose: Compare each product's performance to category average**
+```sql
+SELECT 
+    p.category,
+    p.product_name,
+    COUNT(s.product_id) as units_sold,
+    ROUND(SUM(s.sales_amount), 2) as product_revenue,
+    -- Compare to category averages
+    ROUND(AVG(SUM(s.sales_amount)) OVER (PARTITION BY p.category), 2) as category_avg_revenue,
+    ROUND(SUM(s.sales_amount) - AVG(SUM(s.sales_amount)) OVER (PARTITION BY p.category), 2) as revenue_vs_category_avg,
+    -- Rank within category
+    ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY SUM(s.sales_amount) DESC) as category_rank
+FROM `your-project-id.amazon_sales_analysis.products` p
+JOIN `your-project-id.amazon_sales_analysis.sales` s ON p.product_id = s.product_id
+GROUP BY p.category, p.product_name
+ORDER BY p.category, product_revenue DESC;
+```
 
+## CTEs and Subqueries
+### Customer Segmentation with CTE
+**Purpose: Segment customers using RFM analysis**
+```sql
+WITH customer_metrics AS (
+    SELECT 
+        c.Custkey,
+        c.customer_name,
+        -- Recency: Days since last purchase
+        DATE_DIFF(CURRENT_DATE(), MAX(o.order_date), DAY) as days_since_last_purchase,
+        -- Frequency: Number of orders
+        COUNT(DISTINCT o.order_id) as total_orders,
+        -- Monetary: Total spent
+        ROUND(SUM(s.sales_amount), 2) as total_spent
+    FROM `your-project-id.amazon_sales_analysis.customers` c
+    JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    GROUP BY c.Custkey, c.customer_name
+),
+rfm_scores AS (
+    SELECT 
+        *,
+        -- RFM Scoring (1-5 scale)
+        NTILE(5) OVER (ORDER BY days_since_last_purchase DESC) as recency_score,
+        NTILE(5) OVER (ORDER BY total_orders) as frequency_score,
+        NTILE(5) OVER (ORDER BY total_spent) as monetary_score
+    FROM customer_metrics
+)
+SELECT 
+    customer_name,
+    days_since_last_purchase,
+    total_orders,
+    total_spent,
+    recency_score,
+    frequency_score,
+    monetary_score,
+    -- Customer segments based on RFM
+    CASE 
+        WHEN recency_score >= 4 AND frequency_score >= 4 AND monetary_score >= 4 THEN 'Champions'
+        WHEN recency_score >= 3 AND frequency_score >= 3 AND monetary_score >= 3 THEN 'Loyal Customers'
+        WHEN recency_score >= 3 AND frequency_score <= 2 THEN 'Potential Loyalists'
+        WHEN recency_score <= 2 AND frequency_score >= 3 THEN 'At Risk'
+        WHEN recency_score <= 2 AND frequency_score <= 2 AND monetary_score >= 3 THEN 'Cannot Lose Them'
+        ELSE 'Others'
+    END as customer_segment
+FROM rfm_scores
+ORDER BY monetary_score DESC, frequency_score DESC, recency_score DESC;
+```
 
+### Top Products by Category (Subqueries)
+**Purpose: Find best-selling products in each category**
+```sql
+SELECT 
+    category,
+    product_name,
+    total_revenue,
+    units_sold,
+    category_rank
+FROM (
+    SELECT 
+        p.category,
+        p.product_name,
+        ROUND(SUM(s.sales_amount), 2) as total_revenue,
+        SUM(s.quantity) as units_sold,
+        ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY SUM(s.sales_amount) DESC) as category_rank
+    FROM `your-project-id.amazon_sales_analysis.products` p
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON p.product_id = s.product_id
+    GROUP BY p.category, p.product_name
+) ranked_products
+WHERE category_rank <= 3  -- Top 3 products per category
+ORDER BY category, category_rank;
+```
 
-
-
-
-
-
+### Monthly Growth Analysis with CTE
+**Purpose: Calculate month-over-month growth rates**
+```sql
+WITH monthly_sales AS (
+    SELECT 
+        EXTRACT(YEAR FROM o.order_date) as year,
+        EXTRACT(MONTH FROM o.order_date) as month,
+        COUNT(DISTINCT o.order_id) as orders,
+        ROUND(SUM(s.sales_amount), 2) as revenue
+    FROM `your-project-id.amazon_sales_analysis.orders` o
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    GROUP BY year, month
+),
+growth_analysis AS (
+    SELECT 
+        year,
+        month,
+        orders,
+        revenue,
+        -- Previous month values
+        LAG(orders) OVER (ORDER BY year, month) as prev_month_orders,
+        LAG(revenue) OVER (ORDER BY year, month) as prev_month_revenue
+    FROM monthly_sales
+)
+SELECT 
+    year,
+    month,
+    orders,
+    revenue,
+    prev_month_orders,
+    prev_month_revenue,
+    -- Growth calculations
+    CASE 
+        WHEN prev_month_orders IS NOT NULL THEN
+            ROUND(((orders - prev_month_orders) / prev_month_orders) * 100, 2)
+        ELSE NULL
+    END as order_growth_percent,
+    CASE 
+        WHEN prev_month_revenue IS NOT NULL THEN
+            ROUND(((revenue - prev_month_revenue) / prev_month_revenue) * 100, 2)
+        ELSE NULL
+    END as revenue_growth_percent
+FROM growth_analysis
+ORDER BY year, month;
+```
 
 
 
