@@ -47,6 +47,19 @@ amazon-sales-forecasting/
 ├── README.md # This file
 └── requirements.txt # Python dependencies
 
+3. **Set Up BigQuery**
+- Create Google Cloud project
+- Enable BigQuery API  
+- Download service account credentials
+
+4. **Run Notebooks**
+- Start with `01_data_exploration_cleaning.ipynb`
+- Follow numerical order through all notebooks
+
+5. **Execute SQL Queries**
+- Upload processed data to BigQuery
+- Run queries from `sql/queries.sql`
+
 
 ## 🔍 Key Findings & Insights
 
