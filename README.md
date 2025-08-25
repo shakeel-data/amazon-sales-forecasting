@@ -95,7 +95,7 @@ The initial flat CSV was normalized into a relational star schema to improve que
 This project features over 20 advanced SQL queries. 
 Below are key highlights:
 ### Customer Overview
-Purpose: Basic customer information with aggregated metrics
+**Purpose: Basic customer information with aggregated metrics**
 ```sql
 SELECT 
     customer_name,
@@ -109,8 +109,8 @@ ORDER BY registration_date DESC
 LIMIT 10;
 ```
 
--- Product Catalog Summary
--- Purpose: Overview of products with pricing information
+### Product Catalog Summary
+**Purpose: Overview of products with pricing information**
 ```sql
 SELECT 
     category,
@@ -128,6 +128,139 @@ FROM `your-project-id.amazon_sales_analysis.products`
 WHERE list_price IS NOT NULL
 ORDER BY list_price DESC;
 ```
+### Sales Performance by Month
+**Purpose: Track sales trends over time**
+```sql
+SELECT
+  EXTRACT(YEAR FROM o.order_date) AS year,
+  EXTRACT(MONTH FROM o.order_date) AS month,
+  COUNT(DISTINCT o.order_id) AS total_orders,
+  ROUND(SUM(s.sales_amount), 2) AS total_revenue,
+  ROUND(AVG(s.sales_amount), 2) AS avg_order_value
+FROM
+  `your-project-id.amazon_sales_analysis.orders` AS o
+  JOIN
+  `your-project-id.amazon_sales_analysis.sales` AS s
+  ON o.order_id = s.order_id
+GROUP BY year, month
+ORDER BY year DESC, month DESC;
+```
+
+## JOIN Queries
+### Customer Purchase History (INNER JOIN)
+**Purpose: Show customers who have made purchases**
+```sql
+SELECT 
+    c.customer_name,
+    c.email,
+    COUNT(DISTINCT o.order_id) as total_orders,
+    ROUND(SUM(s.sales_amount), 2) as lifetime_value,
+    MIN(o.order_date) as first_purchase,
+    MAX(o.order_date) as last_purchase
+FROM `your-project-id.amazon_sales_analysis.customers` c
+INNER JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+INNER JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+GROUP BY c.customer_name, c.email
+ORDER BY lifetime_value DESC
+LIMIT 20;
+```
+
+### All Customers with Purchase Status (LEFT JOIN)
+**Purpose: Include customers who haven't made purchases**
+```sql
+SELECT 
+    c.customer_name,
+    c.email,
+    c.registration_date,
+    COALESCE(COUNT(DISTINCT o.order_id), 0) as total_orders,
+    COALESCE(ROUND(SUM(s.sales_amount), 2), 0) as lifetime_value,
+    CASE 
+        WHEN o.customer_id IS NULL THEN 'No Purchases'
+        WHEN COUNT(DISTINCT o.order_id) = 1 THEN 'Single Purchase'
+        ELSE 'Repeat Customer'
+    END as customer_status
+FROM `cedar-router-470112-r3.amazon_sales_analysis.customers` c
+LEFT JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+LEFT JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+GROUP BY c.customer_name, c.email, c.registration_date, o.customer_id
+ORDER BY lifetime_value DESC;
+```
+
+### Product Performance Analysis (RIGHT JOIN)
+**Show all products with their sales performance**
+```sql
+SELECT 
+    p.product_name,
+    p.category,
+    p.list_price,
+    COALESCE(COUNT(s.product_id), 0) as times_sold,
+    COALESCE(ROUND(SUM(s.sales_amount), 2), 0) as total_revenue,
+    COALESCE(ROUND(AVG(s.unit_price), 2), p.list_price) as avg_selling_price
+FROM `your-project-id.amazon_sales_analysis.sales` s
+RIGHT JOIN `your-project-id.amazon_sales_analysis.products` p ON s.product_id = p.product_id
+GROUP BY p.product_name, p.category, p.list_price
+ORDER BY total_revenue DESC;
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 🤖 Machine Learning Models
 
