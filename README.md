@@ -420,11 +420,104 @@ ORDER BY year, month;
 ```
 
 
+## Advanced Analytics
+### Cohort Analysis - Customer Retention
+**Purpose: Track customer behavior over time**
+```sql
+WITH customer_orders AS (
+    SELECT 
+        c.Custkey,
+        o.order_date,
+        ROW_NUMBER() OVER (PARTITION BY c.Custkey ORDER BY o.order_date) as order_sequence,
+        MIN(o.order_date) OVER (PARTITION BY c.Custkey) as first_order_date
+    FROM `your-project-id.amazon_sales_analysis.customers` c
+    JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+),
+cohort_data AS (
+    SELECT 
+        DATE_TRUNC(first_order_date, MONTH) as cohort_month,
+        DATE_DIFF(DATE_TRUNC(order_date, MONTH), DATE_TRUNC(first_order_date, MONTH), MONTH) as period_number,
+        Custkey
+    FROM customer_orders
+)
+SELECT 
+    cohort_month,
+    period_number,
+    COUNT(DISTINCT Custkey) as customers,
+    -- Calculate retention rate
+    ROUND(
+        COUNT(DISTINCT Custkey) / 
+        FIRST_VALUE(COUNT(DISTINCT Custkey)) OVER (
+            PARTITION BY cohort_month 
+            ORDER BY period_number 
+            ROWS UNBOUNDED PRECEDING
+        ) * 100, 2
+    ) as retention_rate
+FROM cohort_data
+GROUP BY cohort_month, period_number
+ORDER BY cohort_month, period_number;
+```
 
+### ABC Analysis - Product Classification
+**Purpose: Classify products by revenue contribution**
+```sql
+WITH product_revenue AS (
+    SELECT 
+        p.product_id,
+        p.product_name,
+        ROUND(SUM(s.sales_amount), 2) as total_revenue
+    FROM `your-project-id.amazon_sales_analysis.products` p
+    JOIN `your-project-id.amazon_sales_analysis.sales` s ON p.product_id = s.product_id
+    GROUP BY p.product_id, p.product_name
+),
+revenue_analysis AS (
+    SELECT 
+        *,
+        SUM(total_revenue) OVER () as total_company_revenue,
+        SUM(total_revenue) OVER (ORDER BY total_revenue DESC ROWS UNBOUNDED PRECEDING) as cumulative_revenue
+    FROM product_revenue
+)
+SELECT 
+    product_name,
+    total_revenue,
+    ROUND((total_revenue / total_company_revenue) * 100, 2) as revenue_percentage,
+    ROUND((cumulative_revenue / total_company_revenue) * 100, 2) as cumulative_percentage,
+    -- ABC Classification
+    CASE 
+        WHEN ROUND((cumulative_revenue / total_company_revenue) * 100, 2) <= 80 THEN 'A'
+        WHEN ROUND((cumulative_revenue / total_company_revenue) * 100, 2) <= 95 THEN 'B'
+        ELSE 'C'
+    END as abc_category
+FROM revenue_analysis
+ORDER BY total_revenue DESC;
+```
 
-
-
-
+### Sales Rep Performance Analysis
+**Purpose: Evaluate sales representative effectiveness**
+```sql
+SELECT 
+    o.sales_rep,
+    COUNT(DISTINCT o.customer_id) as unique_customers,
+    COUNT(DISTINCT o.order_id) as total_orders,
+    ROUND(AVG(order_totals.order_value), 2) as avg_order_value,
+    ROUND(SUM(order_totals.order_value), 2) as total_sales,
+    -- Performance metrics
+    ROUND(SUM(order_totals.order_value) / COUNT(DISTINCT o.order_id), 2) as sales_per_order,
+    ROUND(SUM(order_totals.order_value) / COUNT(DISTINCT o.customer_id), 2) as sales_per_customer,
+    -- Ranking
+    RANK() OVER (ORDER BY SUM(order_totals.order_value) DESC) as sales_rank
+FROM `your-project-id.amazon_sales_analysis.orders` o
+JOIN (
+    SELECT 
+        order_id,
+        SUM(sales_amount) as order_value
+    FROM `your-project-id.amazon_sales_analysis.sales`
+    GROUP BY order_id
+) order_totals ON o.order_id = order_totals.order_id
+WHERE o.sales_rep IS NOT NULL
+GROUP BY o.sales_rep
+ORDER BY total_sales DESC;
+```
 
 
 
