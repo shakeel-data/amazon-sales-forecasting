@@ -1,4 +1,5 @@
 # 🛒 Amazon Sales Forecasting & Analytics
+<img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_20_10 624Z" src="https://github.com/user-attachments/assets/cdb9ca79-b296-44dd-b167-41605929131b" />
 
 ## 📋 Project Overview
 
