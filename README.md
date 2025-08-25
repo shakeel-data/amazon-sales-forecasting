@@ -92,9 +92,10 @@ The initial flat CSV was normalized into a relational star schema to improve que
 
 ## ⚙️ SQL Analysis Showcase
 
-This project features over 20 advanced SQL queries. Below are key highlights:
--- Customer Overview
--- Purpose: Basic customer information with aggregated metrics
+This project features over 20 advanced SQL queries. 
+Below are key highlights:
+### Customer Overview
+Purpose: Basic customer information with aggregated metrics
 ```sql
 SELECT 
     customer_name,
