@@ -460,7 +460,7 @@ SELECT
     ROUND(SUM(s.sales_amount), 2) as lifetime_value,
     MIN(o.order_date) as first_purchase,
     MAX(o.order_date) as last_purchase
-FROM `your-project-id.amazon_sales_analysis.customers` c
+FROM `your-project-id.your-dataset-id.customers` c
 INNER JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
 INNER JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 GROUP BY c.customer_name, c.email
@@ -482,7 +482,7 @@ SELECT
         WHEN COUNT(DISTINCT o.order_id) = 1 THEN 'Single Purchase'
         ELSE 'Repeat Customer'
     END as customer_status
-FROM `your-project-id.amazon_sales_analysis.customers` c
+FROM `your-project-id.your-dataset-id.customers` c
 LEFT JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
 LEFT JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 GROUP BY c.customer_name, c.email, c.registration_date, o.customer_id
@@ -521,7 +521,7 @@ SELECT
         WHEN s.order_id IS NULL THEN 'Missing Sales Info'
         ELSE 'Complete'
     END as data_quality
-FROM `your-project-id.amazon_sales_analysis.orders` o
+FROM `your-project-id.your-dataset-id.orders` o
 FULL OUTER JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 LEFT JOIN `your-project-id.your-dataset-id.customers` c ON o.customer_id = c.Custkey
 LEFT JOIN `your-project-id.your-dataset-id.products` p ON s.product_id = p.product_id
