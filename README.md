@@ -1102,6 +1102,7 @@ print(f"\nTop 5 Most Important Features:")
 print(feature_importance.head())
 ```
 <img width="1669" height="323" alt="image" src="https://github.com/user-attachments/assets/a3fdb5ce-7654-46a7-988a-67f0ff04ad4d" />
+
 #### *Linear Regression (Baseline)*
 - **Performance**: R² = 0.72, RMSE = $1,247
 - **Purpose**: Establish performance baseline
