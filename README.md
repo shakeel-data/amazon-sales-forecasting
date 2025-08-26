@@ -1485,32 +1485,14 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 ```
 <img width="1342" height="672" alt="image" src="https://github.com/user-attachments/assets/16b3156e-d676-4a7e-8540-b66d012c0bf9" />
 
-## 🔍 Key Findings & Insights
-
-### 📈 Sales Performance
-- **Revenue Growth**: Identified 15% YoY growth in food category sales
-- **Seasonality**: Q4 shows 35% higher sales due to holiday shopping
-- **Top Performers**: Premium organic products drive highest margins
-
-### 👥 Customer Segmentation
-- **VIP Customers** (12%): High value, frequent purchasers - focus on retention
-- **At-Risk Customers** (23%): Haven't purchased in 90+ days - re-engagement needed
-- **Regular Customers** (45%): Stable base - opportunity for upselling
-- **New Customers** (20%): Recent acquisitions - nurture for loyalty
-
-### 🔮 Sales Forecasting
-- **Next 6 Months**: Predicted 8% growth with seasonal adjustments
-- **Model Performance**: Random Forest achieved R² = 0.87
-- **Prophet Insights**: Strong yearly seasonality with monthly fluctuations
-
 ## 💡 Key Insights & Business Impact
 
-| Area                  | Insight                                                               | Strategic Recommendation                                                                         |
-| --------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **Sales Performance** | Q4 sales are 35% higher than other quarters due to seasonality.       | Optimize inventory and marketing spend in Q3 to prepare for the Q4 surge.                        |
-| **Product Analysis**  | Premium organic products have the highest profit margins (avg. 23%).  | Expand the premium product line and feature these items in marketing campaigns.                  |
-| **Customer Behavior** | 23% of the customer base is "At-Risk" and has not purchased recently. | Launch a targeted re-engagement campaign with personalized offers to win back these customers.   |
-| **Forecasting**       | Random Forest model predicts an 8% sales increase over the next 6 months. | Adjust financial targets and resource allocation to align with the predicted growth trajectory.    |
+| 🔍 Area                | 📊 Insight                                                                 | 🎯 Strategic Recommendation                                                                                 |
+|------------------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| 📈 **Sales Performance** | Q4 sales are **35% higher** than other quarters due to seasonality.       | Optimize **inventory and marketing** spend in Q3 to prepare for Q4 surge.                                   |
+| 🛒 **Product Analysis**   | Premium organic products have the **highest margins (avg. 23%)**.        | Expand **premium product line** and feature these items in campaigns.                                       |
+| 👥 **Customer Behavior**  | **23%** of customers are "At-Risk" (90+ days no purchase).              | Launch **personalized re-engagement campaigns** to win them back.                                          |
+| 🔮 **Forecasting**        | Random Forest predicts **8% sales growth** over next 6 months (R² = 0.87). | Adjust **financial targets** and resource allocation to align with predicted growth.                       |
 
 ## 📊 Visualizations Created
 
