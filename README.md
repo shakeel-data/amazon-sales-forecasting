@@ -6,11 +6,13 @@
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="60" alt="KMeans"/>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
-  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/forestry.svg" width="40" alt="Random Forest"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/forestry.svg" width="40" alt="Random Forest"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
 
+<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/forestry.svg" width="40" alt="Random Forest" style="filter: invert(1);"/>
+<img src="https://img.shields.io/badge/Random_Forest-228B22?style=flat-square&logo=tree&logoColor=white" width="70" alt="Random Forest"/>
 
 
 
