@@ -987,7 +987,7 @@ UNION ALL SELECT 'Average Order Value', CONCAT('$', CAST(avg_order_value as STRI
 UNION ALL SELECT 'Active Sales Reps', CAST(active_sales_reps as STRING) FROM summary_stats;
 ```
 
-## Machine Learning - Sales Forecasting
+## 🤖 Machine Learning - Sales Forecasting
 ```python
 # Prepare data for ML
 def prepare_ml_data():
@@ -1136,7 +1136,7 @@ print(rf_importance.head())
 ```
 <img width="1626" height="324" alt="image" src="https://github.com/user-attachments/assets/5a3fb005-f3c4-4ad8-ac5f-288da30d6cb5" />
 
-## Visualize Model Performance
+## 📊 Visualize Model Performance
 ```python
 fig, axes = plt.subplots(2, 2, figsize=(15, 12))
 fig.suptitle('Sales Forecasting Model Performance', fontsize=16, fontweight='bold')
@@ -1186,7 +1186,7 @@ plt.show()
 print("Key Insight: Random Forest significantly outperforms Linear Regression, indicating non-linear relationships in the data.")
 ```
 <img width="1489" height="1181" alt="image" src="https://github.com/user-attachments/assets/5ecd52df-fc10-45fd-946b-180f592c15db" />
-**Random Forest (Advanced)**
+- **Random Forest (Advanced)**
    - **Performance**: R² = 0.87, RMSE = $892
    - **Purpose**: Capture non-linear relationships
 
@@ -1234,7 +1234,7 @@ print(f"RMSE: ${prophet_rmse:,.2f}")
 ```
 <img width="1776" height="381" alt="image" src="https://github.com/user-attachments/assets/33feb1b4-17e4-42b9-917a-296fda46891f" />
 
-## Visualize Prophet Forecasting for 6 months
+## 📶 Visualize Prophet Forecasting for 6 months
 ```python
 # --- Plot 1: The Main Forecast ---
 fig, ax = plt.subplots(figsize=(15, 8))
@@ -1260,11 +1260,11 @@ for _, row in future_predictions.head(6).iterrows():
 ```
 <img width="1254" height="701" alt="image" src="https://github.com/user-attachments/assets/5906cb55-6c42-4e57-a97f-b34ac5c5d166" />
 <img width="1644" height="205" alt="image" src="https://github.com/user-attachments/assets/dad6543b-e462-4f3a-a918-4dd3a169e007" />
-**Facebook Prophet (Time-Series)**
+- **Facebook Prophet (Time-Series)**
    - **Performance**: 12-month forecast with seasonality
    - **Purpose**: Long-term forecasting with seasonal patterns
 
-## Customer Segmentation (Unsupervised ML)
+## 👤 Customer Segmentation (Unsupervised ML)
 ```python
 print("CUSTOMER SEGMENTATION - K-MEANS CLUSTERING")
 print("=" * 50)
@@ -1313,7 +1313,7 @@ print(f"Features used for clustering: {clustering_features}")
 ```
 <img width="1688" height="110" alt="image" src="https://github.com/user-attachments/assets/c377ac08-9339-4b00-9eb5-e34be0cabe6b" />
 
-## Elbow Curve
+## 🔺Elbow Curve
 ```python
 # Determine optimal number of clusters using Elbow Method
 inertias = []
@@ -1353,7 +1353,7 @@ print(f"Selected k = {optimal_k} clusters")
 <img width="1489" height="590" alt="image" src="https://github.com/user-attachments/assets/81fe68a5-fd6c-41c7-9388-95474badb6c7" />
 
 
-## K-Means clustering
+## 🌿 K-Means clustering
 ```python
 # Final clustering
 kmeans_final = KMeans(n_clusters=optimal_k, random_state=42, n_init=10)
@@ -1378,7 +1378,7 @@ print(cluster_summary)
 ```
 <img width="1535" height="553" alt="image" src="https://github.com/user-attachments/assets/b9f77457-ec3b-4478-ad21-7472ec0afe02" />
 
-## Visualize customer clusters
+## 🧊 Visualize customer clusters
 ```python
 # PCA for visualization
 pca = PCA(n_components=2)
@@ -1422,8 +1422,13 @@ plt.tight_layout()
 plt.show()
 ```
 <img width="1490" height="1180" alt="image" src="https://github.com/user-attachments/assets/514df4eb-b879-45ba-9292-901f0d9c7263" />
+- **KMeans Clustering** segmented customers into four personas:
+  - **VIP Customers** (12%): High-value, frequent buyers
+  - **Loyal Customers** (45%): Consistent, regular purchasers
+  - **At-Risk Customers** (23%): Haven't purchased recently
+  - **New/Budget Customers** (20%): Recent or infrequent buyers
 
-## Business insights and cluster interpretation
+## 💼 Business insights and cluster interpretation
 ```python
 print("BUSINESS INSIGHTS FROM CUSTOMER SEGMENTATION")
 print("=" * 55)
@@ -1485,15 +1490,6 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 ```
 <img width="1342" height="672" alt="image" src="https://github.com/user-attachments/assets/16b3156e-d676-4a7e-8540-b66d012c0bf9" />
 
-## 🤖 Machine Learning Models
-
-### Sales Forecasting
-Three different models were developed to forecast sales:
-
-1. 
-
-
-
 ## 🔍 Key Findings & Insights
 
 ### 📈 Sales Performance
@@ -1531,15 +1527,10 @@ Three different models were developed to forecast sales:
 6. **Forecasting Plots** - Actual vs predicted with confidence intervals
 7. **Cluster Visualization** - Customer segments in 2D space
 
-## 🛠️ Tech Stack & Skills
-
-| Category              | Technologies & Skills                                                                                             |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Programming**       | Python (Pandas, NumPy, Matplotlib, Seaborn)                                                                       |
-| **Database & SQL**    | Google BigQuery, Advanced SQL (Window Functions, CTEs, Complex JOINs), Database Normalization                     |
-| **ML (Forecasting)**  | Scikit-learn (Linear Regression, RandomForestRegressor), Facebook Prophet                                         |
-| **ML (Segmentation)** | Scikit-learn (KMeans Clustering), PCA                                                                             |
-| **BI & Visualization**| Looker Studio (Integration-ready), Matplotlib, Seaborn                                                            |
-| **Core Competencies** | Data Cleaning, EDA, Feature Engineering, Predictive Modeling, Customer Segmentation (RFM), BI & Strategy          | 
+## ⚙ Tools and Technologies
+- **Kaggle** – Data Source
+- **Jupyter Notebbok** – Interactive environment for coding and presenting analysis
+- **Python** – Data analysis, Manipulation and Visualization
+  - Libraries: `numpy, pandas, matplotlib, seaborn`
 
 *This comprehensive analytics solution showcases the technical depth and business acumen required for senior data roles, positioning it as an exemplary portfolio piece for competitive data science positions.*
