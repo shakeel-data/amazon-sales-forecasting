@@ -356,74 +356,6 @@ print(f"Test: Found {result.iloc[0]['customer_count']} customers")
 ### Solution 2
 Upload the normalized 4 tables manually to Google BigQuery to serve as the single source of truth for all subsequent analysis
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 📊 Project Workflow
-
-The project follows a structured, multi-stage workflow designed to transform raw data into high-value business intelligence.
-
-1. **Data Ingestion & Cleaning**: Load the raw CSV, handle missing values, correct data types, and perform initial quality assessment using Python.
-2. **Database Normalization**: Deconstruct the flat file into a relational schema with four distinct tables (`customers`, `products`, `orders`, `sales`) to ensure data integrity and query efficiency.
-3. **BigQuery Integration**: Upload the normalized tables to Google BigQuery to serve as the single source of truth for all subsequent analysis.
-4. **Advanced SQL Analysis**: Execute over 20 complex SQL queries to perform cohort analysis, calculate RFM scores, and uncover deep business trends.
-5. **Machine Learning Modeling**:
-   - **Forecasting**: Develop three models (Linear Regression, Random Forest, Prophet) to predict future sales.
-   - **Segmentation**: Apply KMeans clustering to segment customers based on their purchasing behavior.
-6. **Insight Generation & Strategy**: Synthesize analytical findings into strategic business recommendations.
-
-## 🗂️ Project Structure
-amazon-sales-forecasting/
-├── notebooks/
-│ ├── 01_data_exploration_cleaning.ipynb # Data cleaning & EDA
-│ ├── 02_sql_analysis_bigquery.ipynb # SQL queries & analysis
-│ ├── 03_machine_learning_forecasting.ipynb # ML models & forecasting
-│ └── 04_customer_segmentation.ipynb # K-means clustering
-├── data/
-│ ├── raw/amazon_foodcategory_sales.csv # Original dataset
-│ └── processed/ # Cleaned & normalized data
-├── sql/
-│ └── queries.sql # All SQL queries
-├── README.md # This file
-
-
-## 🚀 How to Run This Project
-
-### Prerequisites
-- Python 3.8+
-- Access to a Google Cloud Platform (GCP) project with BigQuery enabled.
-- A GCP service account key (`.json` file) with BigQuery User & Data Editor roles.
-
-### Installation & Execution
-1. **Clone the repository:**
-```
-git clone https://github.com/shakeel-data/amazon-sales-forecasting.git
-cd amazon-sales-forecasting
-```
-2. **Install dependencies:**
-pip install -r requirements.txt
-
-3. 
-
-4. **Run the Notebooks:**
-Execute in the following order:
-- `01_data_exploration_cleaning.ipynb`
-- `02_sql_analysis_bigquery.ipynb`
-- `03_machine_learning_forecasting.ipynb`
-- `04_customer_segmentation.ipynb`
-
 ## 🗄️ Database Schema
 
 The initial flat CSV was normalized into a relational star schema to improve query performance and maintain data integrity.
@@ -968,7 +900,6 @@ ORDER BY times_bought_together DESC
 LIMIT 20;
 ```
 
-
 ### Revenue Forecast Base Data
 **Purpose: Prepare data for revenue forecasting**
 ```sql
@@ -1005,7 +936,6 @@ FROM daily_sales
 ORDER BY order_date DESC;
 ```
 
-
 ### Executive Dashboard Summary
 **Purpose: Key metrics for executive reporting**
 ```sql
@@ -1031,6 +961,564 @@ UNION ALL SELECT 'Total Revenue', CONCAT('$', CAST(total_revenue as STRING)) FRO
 UNION ALL SELECT 'Average Order Value', CONCAT('$', CAST(avg_order_value as STRING)) FROM summary_stats
 UNION ALL SELECT 'Active Sales Reps', CAST(active_sales_reps as STRING) FROM summary_stats;
 ```
+
+## Machine Learning - Sales Forecasting
+```python
+# Prepare data for ML
+def prepare_ml_data():
+    """Prepare aggregated data for machine learning"""
+
+    # Load the original data
+    df = pd.read_csv('your-file-path')
+
+    # Clean and convert dates
+    df['Invoice Date'] = pd.to_datetime(df['Invoice Date'])
+
+    # Create aggregated monthly data by product
+    ml_data = df.groupby([
+        df['Invoice Date'].dt.to_period('M'),
+        'Item',
+        'Item Class'
+    ]).agg({
+        'Sales Amount': 'sum',
+        'Sales Quantity': 'sum',
+        'Sales Price': 'mean',
+        'List Price': 'mean',
+        'Discount Amount': 'sum',
+        'Sales Margin Amount': 'sum'
+    }).reset_index()
+
+    # Rename columns
+    ml_data.columns = ['month', 'product', 'category', 'sales_amount',
+                      'quantity', 'avg_price', 'list_price', 'discount', 'margin']
+
+    # Convert period to datetime
+    ml_data['month'] = ml_data['month'].dt.to_timestamp()
+
+    # Create time-based features
+    ml_data['year'] = ml_data['month'].dt.year
+    ml_data['month_num'] = ml_data['month'].dt.month
+    ml_data['quarter'] = ml_data['month'].dt.quarter
+
+    # Create lag features (previous months)
+    ml_data = ml_data.sort_values(['product', 'month'])
+    ml_data['sales_lag_1'] = ml_data.groupby('product')['sales_amount'].shift(1)
+    ml_data['sales_lag_2'] = ml_data.groupby('product')['sales_amount'].shift(2)
+    ml_data['sales_lag_3'] = ml_data.groupby('product')['sales_amount'].shift(3)
+
+    # Calculate rolling averages
+    ml_data['sales_rolling_3'] = ml_data.groupby('product')['sales_amount'].rolling(3).mean().values
+
+    return ml_data
+
+ml_data = prepare_ml_data()
+print(f"ML dataset shape: {ml_data.shape}")
+ml_data.head()
+```
+**ML dataset shape: (8137, 16)**
+
+| month       | product                | category | sales_amount | quantity | avg_price | list_price | discount | margin | year | month_num | quarter | sales_lag_1 | sales_lag_2 | sales_lag_3 | sales_rolling_3 |
+|-------------|-----------------------|----------|--------------|----------|-----------|------------|----------|--------|------|-----------|---------|-------------|-------------|-------------|----------------|
+| 2017-01-01  | American Beef Bologna | P01      | 229.76       | 20       | 11.488000 | 25.14      | 273.04   | 65.40  | 2017 | 1         | 1       | NaN         | NaN         | NaN         | NaN            |
+| 2017-02-01  | American Beef Bologna | P01      | 362.02       | 30       | 12.067333 | 25.14      | 392.18   | 115.48 | 2017 | 2         | 1       | 229.76      | NaN         | NaN         | NaN            |
+| 2017-08-01  | American Beef Bologna | P01      | 362.02       | 30       | 12.067333 | 25.14      | 392.18   | 115.48 | 2017 | 8         | 3       | 362.02      | 229.76      | NaN         | 317.933333     |
+| 2017-10-01  | American Beef Bologna | P01      | 239.33       | 20       | 11.966500 | 25.14      | 263.47   | 74.97  | 2017 | 10        | 4       | 362.02      | 362.02      | 229.76      | 321.123333     |
+| 2017-12-01  | American Beef Bologna | P01      | 239.33       | 20       | 11.966500 | 25.14      | 263.47   | 74.97  | 2017 | 12        | 4       | 239.33      | 362.02      | 362.02      | 280.226667     |
+
+
+## Linear Regression
+```python
+print("LINEAR REGRESSION MODEL")
+print("-" * 30)
+
+# Prepare features and target
+feature_columns = ['year', 'month_num', 'quarter', 'avg_price', 'list_price',
+                  'sales_lag_1', 'sales_lag_2', 'sales_lag_3', 'sales_rolling_3']
+
+# Remove rows with NaN values (due to lag features)
+ml_clean = ml_data.dropna()
+
+X = ml_clean[feature_columns]
+y = ml_clean['sales_amount']
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Linear Regression
+lr_model = LinearRegression()
+lr_model.fit(X_train, y_train)
+
+# Make predictions
+lr_pred = lr_model.predict(X_test)
+
+# Calculate metrics
+lr_mae = mean_absolute_error(y_test, lr_pred)
+lr_mse = mean_squared_error(y_test, lr_pred)
+lr_rmse = np.sqrt(lr_mse)
+lr_r2 = r2_score(y_test, lr_pred)
+
+print(f"Linear Regression Results:")
+print(f"MAE: ${lr_mae:,.2f}")
+print(f"RMSE: ${lr_rmse:,.2f}")
+print(f"R² Score: {lr_r2:.4f}")
+
+# Feature importance
+feature_importance = pd.DataFrame({
+    'feature': feature_columns,
+    'coefficient': lr_model.coef_,
+    'abs_coefficient': np.abs(lr_model.coef_)
+}).sort_values('abs_coefficient', ascending=False)
+
+print(f"\nTop 5 Most Important Features:")
+print(feature_importance.head())
+```
+<img width="1669" height="323" alt="image" src="https://github.com/user-attachments/assets/a3fdb5ce-7654-46a7-988a-67f0ff04ad4d" />
+
+## Random Forest
+```python
+print("\n RANDOM FOREST MODEL")
+print("-" * 30)
+
+# Train Random Forest
+rf_model = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
+rf_model.fit(X_train, y_train)
+
+# Make predictions
+rf_pred = rf_model.predict(X_test)
+
+# Calculate metrics
+rf_mae = mean_absolute_error(y_test, rf_pred)
+rf_mse = mean_squared_error(y_test, rf_pred)
+rf_rmse = np.sqrt(rf_mse)
+rf_r2 = r2_score(y_test, rf_pred)
+
+print(f"Random Forest Results:")
+print(f"MAE: ${rf_mae:,.2f}")
+print(f"RMSE: ${rf_rmse:,.2f}")
+print(f"R² Score: {rf_r2:.4f}")
+
+# Feature importance
+rf_importance = pd.DataFrame({
+    'feature': feature_columns,
+    'importance': rf_model.feature_importances_
+}).sort_values('importance', ascending=False)
+
+print(f"\nTop 5 Most Important Features:")
+print(rf_importance.head())
+```
+<img width="1626" height="324" alt="image" src="https://github.com/user-attachments/assets/5a3fb005-f3c4-4ad8-ac5f-288da30d6cb5" />
+
+## Visualize Model Performance
+```python
+fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+fig.suptitle('Sales Forecasting Model Performance', fontsize=16, fontweight='bold')
+
+# 1. Actual vs Predicted - Linear Regression
+axes[0,0].scatter(y_test, lr_pred, alpha=0.6)
+axes[0,0].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
+axes[0,0].set_xlabel('Actual Sales')
+axes[0,0].set_ylabel('Predicted Sales')
+axes[0,0].set_title(f'Linear Regression\nR² = {lr_r2:.4f}')
+
+# 2. Actual vs Predicted - Random Forest
+axes[0,1].scatter(y_test, rf_pred, alpha=0.6)
+axes[0,1].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
+axes[0,1].set_xlabel('Actual Sales')
+axes[0,1].set_ylabel('Predicted Sales')
+axes[0,1].set_title(f'Random Forest\nR² = {rf_r2:.4f}')
+
+# 3. Feature Importance - Random Forest
+top_features = rf_importance.head(8)
+axes[1,0].barh(range(len(top_features)), top_features['importance'])
+axes[1,0].set_yticks(range(len(top_features)))
+axes[1,0].set_yticklabels(top_features['feature'])
+axes[1,0].set_xlabel('Importance')
+axes[1,0].set_title('Random Forest Feature Importance')
+
+# 4. Model Comparison
+models = ['Linear Regression', 'Random Forest']
+mae_scores = [lr_mae, rf_mae]
+rmse_scores = [lr_rmse, rf_rmse]
+
+x = np.arange(len(models))
+width = 0.35
+
+axes[1,1].bar(x - width/2, mae_scores, width, label='MAE', alpha=0.8)
+axes[1,1].bar(x + width/2, rmse_scores, width, label='RMSE', alpha=0.8)
+axes[1,1].set_xlabel('Models')
+axes[1,1].set_ylabel('Error')
+axes[1,1].set_title('Model Performance Comparison')
+axes[1,1].set_xticks(x)
+axes[1,1].set_xticklabels(models)
+axes[1,1].legend()
+
+plt.tight_layout()
+plt.show()
+
+print("Key Insight: Random Forest significantly outperforms Linear Regression, indicating non-linear relationships in the data.")
+```
+<img width="1489" height="1181" alt="image" src="https://github.com/user-attachments/assets/5ecd52df-fc10-45fd-946b-180f592c15db" />
+
+## Facebook Prophet for Time Series Forecasting
+```python
+print("\nFACEBOOK PROPHET TIME SERIES FORECASTING")
+print("-" * 50)
+
+# Prepare data for Prophet (requires specific column names)
+def prepare_prophet_data():
+    # Aggregate data by month for overall sales
+    prophet_data = df.groupby(df['Invoice Date'].dt.to_period('M'))['Sales Amount'].sum().reset_index()
+    prophet_data['Invoice Date'] = prophet_data['Invoice Date'].dt.to_timestamp()
+
+    # Prophet requires 'ds' and 'y' columns
+    prophet_data.columns = ['ds', 'y']
+
+    return prophet_data
+
+prophet_data = prepare_prophet_data()
+print(f"Prophet dataset shape: {prophet_data.shape}")
+
+# Initialize and fit Prophet model
+prophet_model = Prophet(
+    daily_seasonality=False,
+    weekly_seasonality=False,
+    yearly_seasonality=True,
+    changepoint_prior_scale=0.05
+)
+
+prophet_model.fit(prophet_data)
+
+# Create future dataframe for 12 months ahead
+future = prophet_model.make_future_dataframe(periods=12, freq='M')
+forecast = prophet_model.predict(future)
+
+# Calculate metrics on historical data
+historical_pred = forecast[forecast['ds'].isin(prophet_data['ds'])]
+prophet_mae = mean_absolute_error(prophet_data['y'], historical_pred['yhat'])
+prophet_rmse = np.sqrt(mean_squared_error(prophet_data['y'], historical_pred['yhat']))
+
+print(f"Prophet Time Series Results:")
+print(f"MAE: ${prophet_mae:,.2f}")
+print(f"RMSE: ${prophet_rmse:,.2f}")
+```
+<img width="1776" height="381" alt="image" src="https://github.com/user-attachments/assets/33feb1b4-17e4-42b9-917a-296fda46891f" />
+
+## Visualize Prophet Forecasting for 6 months
+```python
+# --- Plot 1: The Main Forecast ---
+fig, ax = plt.subplots(figsize=(15, 8))
+prophet_model.plot(forecast, ax=ax)
+ax.set_title('Amazon Sales Forecast - Next 12 Months', fontweight='bold')
+ax.set_xlabel('Date')
+ax.set_ylabel('Sales Amount ($)')
+ax.grid(True, alpha=0.3)
+plt.show()
+
+# --- Plot 2: The Components ---
+# Call this separately to let Prophet create its own multi-plot figure
+fig_components = prophet_model.plot_components(forecast)
+plt.show()
+
+# --- Future Predictions
+future_predictions = forecast[forecast['ds'] > prophet_data['ds'].max()][['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
+print(f"\n SALES FORECAST FOR NEXT 6 MONTHS:")
+print("=" * 50)
+for _, row in future_predictions.head(6).iterrows():
+    print(f"{row['ds'].strftime('%Y-%m')}: ${row['yhat']:,.0f} "
+          f"(Range: ${row['yhat_lower']:,.0f} - ${row['yhat_upper']:,.0f})")
+```
+<img width="1254" height="701" alt="image" src="https://github.com/user-attachments/assets/5906cb55-6c42-4e57-a97f-b34ac5c5d166" />
+<img width="1644" height="205" alt="image" src="https://github.com/user-attachments/assets/dad6543b-e462-4f3a-a918-4dd3a169e007" />
+
+
+## Customer Segmentation (Unsupervised ML)
+```python
+print("CUSTOMER SEGMENTATION - K-MEANS CLUSTERING")
+print("=" * 50)
+
+# Prepare customer behavior data
+def prepare_segmentation_data():
+    # Calculate customer metrics
+    customer_behavior = df.groupby('Custkey').agg({
+        'Sales Amount': ['sum', 'mean', 'count'],
+        'Sales Quantity': 'sum',
+        'Discount Amount': 'sum',
+        'Sales Margin Amount': 'sum',
+        'Invoice Date': ['min', 'max']
+    }).reset_index()
+
+    # Flatten column names
+    customer_behavior.columns = [
+        'customer_id', 'total_spent', 'avg_order_value', 'order_frequency',
+        'total_quantity', 'total_discount', 'total_margin', 'first_purchase', 'last_purchase'
+    ]
+
+    # Calculate additional metrics
+    customer_behavior['customer_lifetime'] = (customer_behavior['last_purchase'] -
+                                            customer_behavior['first_purchase']).dt.days
+    customer_behavior['days_since_last_purchase'] = (df['Invoice Date'].max() -
+                                                   customer_behavior['last_purchase']).dt.days
+    customer_behavior['avg_discount_rate'] = customer_behavior['total_discount'] / customer_behavior['total_spent']
+    customer_behavior['profit_margin'] = customer_behavior['total_margin'] / customer_behavior['total_spent']
+
+    return customer_behavior
+
+customer_data = prepare_segmentation_data()
+print(f"Customer segmentation dataset shape: {customer_data.shape}")
+
+# Select features for clustering
+clustering_features = ['total_spent', 'avg_order_value', 'order_frequency',
+                      'days_since_last_purchase', 'avg_discount_rate']
+
+X_cluster = customer_data[clustering_features].fillna(0)
+
+# Standardize the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_cluster)
+
+print(f"Features used for clustering: {clustering_features}")
+```
+<img width="1688" height="110" alt="image" src="https://github.com/user-attachments/assets/c377ac08-9339-4b00-9eb5-e34be0cabe6b" />
+
+## Elbow Curve
+```python
+# Determine optimal number of clusters using Elbow Method
+inertias = []
+silhouette_scores = []
+k_range = range(2, 11)
+
+from sklearn.metrics import silhouette_score
+
+for k in k_range:
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    kmeans.fit(X_scaled)
+    inertias.append(kmeans.inertia_)
+    silhouette_scores.append(silhouette_score(X_scaled, kmeans.labels_))
+
+# Plot elbow curve
+fig, axes = plt.subplots(1, 2, figsize=(15, 6))
+
+axes[0].plot(k_range, inertias, 'bo-')
+axes[0].set_xlabel('Number of Clusters (k)')
+axes[0].set_ylabel('Inertia')
+axes[0].set_title('Elbow Method for Optimal k')
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(k_range, silhouette_scores, 'ro-')
+axes[1].set_xlabel('Number of Clusters (k)')
+axes[1].set_ylabel('Silhouette Score')
+axes[1].set_title('Silhouette Score vs Number of Clusters')
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+# Choose optimal k (let's use k=4 based on elbow method)
+optimal_k = 4
+print(f"Selected k = {optimal_k} clusters")
+```
+<img width="1489" height="590" alt="image" src="https://github.com/user-attachments/assets/81fe68a5-fd6c-41c7-9388-95474badb6c7" />
+
+
+## K-Means clustering
+```python
+# Final clustering
+kmeans_final = KMeans(n_clusters=optimal_k, random_state=42, n_init=10)
+cluster_labels = kmeans_final.fit_predict(X_scaled)
+
+# Add cluster labels to customer data
+customer_data['cluster'] = cluster_labels
+
+# Analyze clusters
+cluster_summary = customer_data.groupby('cluster').agg({
+    'total_spent': ['mean', 'median'],
+    'avg_order_value': ['mean', 'median'],
+    'order_frequency': ['mean', 'median'],
+    'days_since_last_purchase': ['mean', 'median'],
+    'avg_discount_rate': ['mean', 'median'],
+    'customer_id': 'count'
+}).round(2)
+
+print("CLUSTER ANALYSIS SUMMARY:")
+print("=" * 40)
+print(cluster_summary)
+```
+<img width="1535" height="553" alt="image" src="https://github.com/user-attachments/assets/b9f77457-ec3b-4478-ad21-7472ec0afe02" />
+
+## Visualize customer clusters
+```python
+# PCA for visualization
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+fig.suptitle('Customer Segmentation Analysis', fontsize=16, fontweight='bold')
+
+# 1. PCA visualization of clusters
+scatter = axes[0,0].scatter(X_pca[:, 0], X_pca[:, 1], c=cluster_labels, cmap='viridis', alpha=0.6)
+axes[0,0].set_xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.1%} variance)')
+axes[0,0].set_ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.1%} variance)')
+axes[0,0].set_title('Customer Clusters (PCA Visualization)')
+plt.colorbar(scatter, ax=axes[0,0])
+
+# 2. Total Spent vs Order Frequency
+for cluster in range(optimal_k):
+    cluster_data = customer_data[customer_data['cluster'] == cluster]
+    axes[0,1].scatter(cluster_data['total_spent'], cluster_data['order_frequency'],
+                     label=f'Cluster {cluster}', alpha=0.7)
+axes[0,1].set_xlabel('Total Spent ($)')
+axes[0,1].set_ylabel('Order Frequency')
+axes[0,1].set_title('Total Spent vs Order Frequency')
+axes[0,1].legend()
+
+# 3. Cluster sizes
+cluster_counts = customer_data['cluster'].value_counts().sort_index()
+axes[1,0].bar(cluster_counts.index, cluster_counts.values)
+axes[1,0].set_xlabel('Cluster')
+axes[1,0].set_ylabel('Number of Customers')
+axes[1,0].set_title('Customer Distribution by Cluster')
+
+# 4. Average Order Value by Cluster
+cluster_aov = customer_data.groupby('cluster')['avg_order_value'].mean()
+axes[1,1].bar(cluster_aov.index, cluster_aov.values)
+axes[1,1].set_xlabel('Cluster')
+axes[1,1].set_ylabel('Average Order Value ($)')
+axes[1,1].set_title('Average Order Value by Cluster')
+
+plt.tight_layout()
+plt.show()
+```
+<img width="1490" height="1180" alt="image" src="https://github.com/user-attachments/assets/514df4eb-b879-45ba-9292-901f0d9c7263" />
+
+## Business insights and cluster interpretation
+```python
+print("BUSINESS INSIGHTS FROM CUSTOMER SEGMENTATION")
+print("=" * 55)
+
+cluster_insights = {}
+for cluster in range(optimal_k):
+    cluster_data = customer_data[customer_data['cluster'] == cluster]
+
+    insights = {
+        'size': len(cluster_data),
+        'avg_spent': cluster_data['total_spent'].mean(),
+        'avg_orders': cluster_data['order_frequency'].mean(),
+        'avg_order_value': cluster_data['avg_order_value'].mean(),
+        'days_since_last': cluster_data['days_since_last_purchase'].mean(),
+        'discount_rate': cluster_data['avg_discount_rate'].mean()
+    }
+
+    cluster_insights[cluster] = insights
+
+# Define cluster names based on characteristics
+cluster_names = {
+    0: "Budget Conscious",
+    1: "VIP Customers",
+    2: "Regular Customers",
+    3: "At-Risk Customers"
+}
+
+# Sort clusters by total spending for better naming
+sorted_clusters = sorted(cluster_insights.items(), key=lambda x: x[1]['avg_spent'], reverse=True)
+
+print("Cluster Characteristics:")
+print("-" * 25)
+
+for i, (cluster, data) in enumerate(sorted_clusters):
+    if data['avg_spent'] > 1000:
+        segment = "VIP Customers"
+        recommendation = "Offer premium services and exclusive deals"
+    elif data['avg_spent'] > 500:
+        segment = "Loyal Customers"
+        recommendation = "Implement loyalty program and cross-sell"
+    elif data['days_since_last'] > 90:
+        segment = "At-Risk Customers"
+        recommendation = "Re-engagement campaign with special offers"
+    else:
+        segment = "Regular Customers"
+        recommendation = "Encourage higher order values"
+
+    print(f"\n Cluster {cluster} - {segment}:")
+    print(f"   Size: {data['size']} customers ({data['size']/len(customer_data)*100:.1f}%)")
+    print(f"   Avg Spent: ${data['avg_spent']:,.2f}")
+    print(f"   Avg Orders: {data['avg_orders']:.1f}")
+    print(f"   Avg Order Value: ${data['avg_order_value']:,.2f}")
+    print(f"   Days Since Last Purchase: {data['days_since_last']:.0f}")
+    print(f"   Strategy: {recommendation}")
+
+# Save segmented customer data
+customer_data.to_csv('data/processed/customer_segments.csv', index=False)
+print(f"\n Customer segmentation analysis completed! Data saved to 'customer_segments.csv'")
+```
+<img width="1342" height="672" alt="image" src="https://github.com/user-attachments/assets/16b3156e-d676-4a7e-8540-b66d012c0bf9" />
+
+
+
+
+
+
+
+
+
+
+
+
+## 📊 Project Workflow
+
+The project follows a structured, multi-stage workflow designed to transform raw data into high-value business intelligence.
+
+1. **Data Ingestion & Cleaning**: Load the raw CSV, handle missing values, correct data types, and perform initial quality assessment using Python.
+2. **Database Normalization**: Deconstruct the flat file into a relational schema with four distinct tables (`customers`, `products`, `orders`, `sales`) to ensure data integrity and query efficiency.
+3. **BigQuery Integration**: Upload the normalized tables to Google BigQuery to serve as the single source of truth for all subsequent analysis.
+4. **Advanced SQL Analysis**: Execute over 20 complex SQL queries to perform cohort analysis, calculate RFM scores, and uncover deep business trends.
+5. **Machine Learning Modeling**:
+   - **Forecasting**: Develop three models (Linear Regression, Random Forest, Prophet) to predict future sales.
+   - **Segmentation**: Apply KMeans clustering to segment customers based on their purchasing behavior.
+6. **Insight Generation & Strategy**: Synthesize analytical findings into strategic business recommendations.
+
+## 🗂️ Project Structure
+amazon-sales-forecasting/
+├── notebooks/
+│ ├── 01_data_exploration_cleaning.ipynb # Data cleaning & EDA
+│ ├── 02_sql_analysis_bigquery.ipynb # SQL queries & analysis
+│ ├── 03_machine_learning_forecasting.ipynb # ML models & forecasting
+│ └── 04_customer_segmentation.ipynb # K-means clustering
+├── data/
+│ ├── raw/amazon_foodcategory_sales.csv # Original dataset
+│ └── processed/ # Cleaned & normalized data
+├── sql/
+│ └── queries.sql # All SQL queries
+├── README.md # This file
+
+
+## 🚀 How to Run This Project
+
+### Prerequisites
+- Python 3.8+
+- Access to a Google Cloud Platform (GCP) project with BigQuery enabled.
+- A GCP service account key (`.json` file) with BigQuery User & Data Editor roles.
+
+### Installation & Execution
+1. **Clone the repository:**
+```
+git clone https://github.com/shakeel-data/amazon-sales-forecasting.git
+cd amazon-sales-forecasting
+```
+2. **Install dependencies:**
+pip install -r requirements.txt
+
+3. 
+
+4. **Run the Notebooks:**
+Execute in the following order:
+- `01_data_exploration_cleaning.ipynb`
+- `02_sql_analysis_bigquery.ipynb`
+- `03_machine_learning_forecasting.ipynb`
+- `04_customer_segmentation.ipynb`
+
+
+
+
 
 
 ## 🤖 Machine Learning Models
