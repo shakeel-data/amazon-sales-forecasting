@@ -14,6 +14,19 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="40" alt="KMeans"/>
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/facebook.svg" width="40" alt="Facebook Prophet"/>
+  <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/forestadmin.svg" width="40" alt="Random Forest"/>
+  <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/scipy.svg" width="40" alt="Linear Regression"/>  
+  <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/scikitlearn.svg" width="40" alt="KMeans"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Prophet-1877F2?style=flat-square&logo=facebook&logoColor=white" width="60" alt="Facebook Prophet"/>
+  <img src="https://img.shields.io/badge/Random_Forest-228B22?style=flat-square&logo=tree&logoColor=white" width="80" alt="Random Forest"/>
+  <img src="https://img.shields.io/badge/Linear_Regression-FF6B35?style=flat-square&logo=chartdotjs&logoColor=white" width="100" alt="Linear Regression"/>
+  <img src="https://img.shields.io/badge/KMeans-9C27B0?style=flat-square&logo=clustering&logoColor=white" width="60" alt="KMeans"/>
+</p>
 
 
 
