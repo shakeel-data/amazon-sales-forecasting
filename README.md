@@ -12,10 +12,9 @@
   <img src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" width="40" alt="KMeans Clustering"/>
 </p>
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/59/LightGBM_logo_black_text.svg" width="40" alt="LightGBM"/>
-<img src="https://seeklogo.com/images/L/lightgbm-logo-87CE69077C-seeklogo.com.png" width="40" alt="LightGBM"/>
-<img src="https://img.shields.io/badge/LightGBM-00599C?style=flat-square&logo=microsoft&logoColor=white" width="70" alt="LightGBM"/>
-
+<img src="https://raw.githubusercontent.com/microsoft/LightGBM/master/docs/logo/LightGBM_logo_black_text.svg" width="40" alt="LightGBM"/>
+<img src="https://github.com/microsoft/LightGBM/raw/master/docs/logo/LightGBM_logo_black_text.svg" width="40" alt="LightGBM"/>
+<img src="https://raw.githubusercontent.com/microsoft/LightGBM/master/docs/logo/LightGBM_logo_black_text.png" width="40" alt="LightGBM"/>
 
 
 
