@@ -25,7 +25,7 @@ This project provides a full-stack analytics solution, beginning with raw data i
   - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/products.csv">products.csv</a>
   - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/sales.csv">sales.csv</a>
 - SQL
-  - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon-sales.sql">queries</a>
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon-sales.sql">queries</a>
 - Python
   <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon_Sales_Forecasting.ipynb">codes</a>
 - Customer segment
