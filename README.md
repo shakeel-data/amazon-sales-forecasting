@@ -1,4 +1,4 @@
-# 🛒 Amazon Sales Forecasting & Customer Analytics
+# 🛒 Amazon Sales Forecasting & Customer Analytics Project | Python + Big Query + Linear Regression + Random Forest + Prophet + KMeans Clustering
 
 <img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
 
@@ -28,6 +28,31 @@ This project provides a full-stack analytics solution, beginning with raw data i
   <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon_Sales_Forecasting.ipynb">codes</a>
 - Customer segment
 <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customer_segments.csv">csv</a>
+
+### Prerequisites
+- Python 3.8+
+- Access to a Google Cloud Platform (GCP) project with BigQuery enabled.
+- A GCP service account key (`.json` file) with BigQuery User & Data Editor roles.
+
+### Installation & Execution
+1. **Clone the repository:**
+```
+git clone https://github.com/shakeel-data/amazon-sales-forecasting.git
+cd amazon-sales-forecasting
+```
+---
+## 📊 Project breakdown in Simple steps
+
+The project follows a structured, multi-stage workflow designed to transform raw data into high-value business intelligence.
+1. **Data Ingestion & Cleaning**: Load the raw CSV, handle missing values, correct data types, and perform initial quality assessment using Python.
+2. **Database Normalization**: Deconstruct the flat file into a relational schema with four distinct tables (`customers`, `products`, `orders`, `sales`) to ensure data integrity and query efficiency.
+3. **BigQuery Integration**: Upload the normalized tables to Google BigQuery to serve as the single source of truth for all subsequent analysis.
+4. **Advanced SQL Analysis**: Execute over 20 complex SQL queries to perform cohort analysis, calculate RFM scores, and uncover deep business trends.
+5. **Machine Learning Modeling**:
+   - **Forecasting**: Develop three models (Linear Regression, Random Forest, Prophet) to predict future sales.
+   - **Segmentation**: Apply KMeans clustering to segment customers based on their purchasing behavior.
+6. **Insight Generation & Strategy**: Synthesize analytical findings into strategic business recommendations.
+---
 
 ## 🔧 Project Workflow
 ### 📥 Load Packages and Data Ingestion
@@ -1452,75 +1477,6 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 ```
 <img width="1342" height="672" alt="image" src="https://github.com/user-attachments/assets/16b3156e-d676-4a7e-8540-b66d012c0bf9" />
 
-
-
-
-
-
-
-
-
-
-
-
-## 📊 Project Workflow
-
-The project follows a structured, multi-stage workflow designed to transform raw data into high-value business intelligence.
-
-1. **Data Ingestion & Cleaning**: Load the raw CSV, handle missing values, correct data types, and perform initial quality assessment using Python.
-2. **Database Normalization**: Deconstruct the flat file into a relational schema with four distinct tables (`customers`, `products`, `orders`, `sales`) to ensure data integrity and query efficiency.
-3. **BigQuery Integration**: Upload the normalized tables to Google BigQuery to serve as the single source of truth for all subsequent analysis.
-4. **Advanced SQL Analysis**: Execute over 20 complex SQL queries to perform cohort analysis, calculate RFM scores, and uncover deep business trends.
-5. **Machine Learning Modeling**:
-   - **Forecasting**: Develop three models (Linear Regression, Random Forest, Prophet) to predict future sales.
-   - **Segmentation**: Apply KMeans clustering to segment customers based on their purchasing behavior.
-6. **Insight Generation & Strategy**: Synthesize analytical findings into strategic business recommendations.
-
-## 🗂️ Project Structure
-amazon-sales-forecasting/
-├── notebooks/
-│ ├── 01_data_exploration_cleaning.ipynb # Data cleaning & EDA
-│ ├── 02_sql_analysis_bigquery.ipynb # SQL queries & analysis
-│ ├── 03_machine_learning_forecasting.ipynb # ML models & forecasting
-│ └── 04_customer_segmentation.ipynb # K-means clustering
-├── data/
-│ ├── raw/amazon_foodcategory_sales.csv # Original dataset
-│ └── processed/ # Cleaned & normalized data
-├── sql/
-│ └── queries.sql # All SQL queries
-├── README.md # This file
-
-
-## 🚀 How to Run This Project
-
-### Prerequisites
-- Python 3.8+
-- Access to a Google Cloud Platform (GCP) project with BigQuery enabled.
-- A GCP service account key (`.json` file) with BigQuery User & Data Editor roles.
-
-### Installation & Execution
-1. **Clone the repository:**
-```
-git clone https://github.com/shakeel-data/amazon-sales-forecasting.git
-cd amazon-sales-forecasting
-```
-2. **Install dependencies:**
-pip install -r requirements.txt
-
-3. 
-
-4. **Run the Notebooks:**
-Execute in the following order:
-- `01_data_exploration_cleaning.ipynb`
-- `02_sql_analysis_bigquery.ipynb`
-- `03_machine_learning_forecasting.ipynb`
-- `04_customer_segmentation.ipynb`
-
-
-
-
-
-
 ## 🤖 Machine Learning Models
 
 ### Sales Forecasting
@@ -1582,35 +1538,6 @@ Three different models were developed to forecast sales:
 6. **Forecasting Plots** - Actual vs predicted with confidence intervals
 7. **Cluster Visualization** - Customer segments in 2D space
 
-## 🎯 Business Impact & Recommendations
-
-### Immediate Actions:
-1. **Re-engage At-Risk Customers** with targeted 15% discount campaign
-2. **Expand Premium Product Line** - highest margin potential
-3. **Optimize Q4 Inventory** for 35% seasonal sales increase
-4. **Implement Loyalty Program** for regular customers
-
-### Strategic Initiatives:
-1. **Predictive Analytics Dashboard** for real-time decision making
-2. **Dynamic Pricing Strategy** based on demand forecasting
-3. **Personalized Marketing** using customer segmentation insights
-4. **Supply Chain Optimization** aligned with sales forecasts
-
-## 🔄 Future Enhancements
-
-- [ ] Real-time streaming analytics with Apache Kafka
-- [ ] Deep learning models (LSTM) for complex time series
-- [ ] A/B testing framework for marketing campaigns
-- [ ] Advanced attribution modeling
-- [ ] Automated anomaly detection system
-
-## 📈 Dashboard Integration
-
-This project is designed for seamless integration with **Looker Studio**:
-- Pre-built BigQuery tables ready for connection
-- KPI definitions and business logic documented
-- Suggested visualizations and filters provided
-- Automated refresh capabilities planned
 ## 🛠️ Tech Stack & Skills
 
 | Category              | Technologies & Skills                                                                                             |
