@@ -6,16 +6,16 @@
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
   <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html" target="_blank" rel="noreferrer">
-  <img src="https://www.svgrepo.com/show/494498/random-forest.svg" alt="Random Forest" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/scikitlearn/scikitlearn-original.svg" alt="Random Forest" width="40" height="40"/>
 </a>
 <a href="https://facebook.github.io/prophet/" target="_blank" rel="noreferrer">
   <img src="https://facebook.github.io/prophet/img/prophet-logo.svg" alt="Prophet" width="40" height="40"/>
 </a>
 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html" target="_blank" rel="noreferrer">
-  <img src="https://www.svgrepo.com/show/493959/linear-regression.svg" alt="Linear Regression" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/scikitlearn/scikitlearn-original.svg" alt="Linear Regression" width="40" height="40"/>
 </a>
 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html" target="_blank" rel="noreferrer">
-  <img src="https://www.svgrepo.com/show/494637/kmeans.svg" alt="K-Means" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/scikitlearn/scikitlearn-original.svg" alt="K-Means" width="40" height="40"/>
 </a>
 </p>
 
