@@ -7,10 +7,9 @@
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="60" alt="KMeans"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
-  <img src="https://github.com/user-attachments/assets/a2713689-379a-473e-ab6c-abd814eb069c" width="40" alt="Custom Image"/>
+  <img src="https://github.com/user-attachments/assets/e35b27ca-31c4-423f-86d1-1ec31f3df60f" width="40" alt="Custom Image"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
-
 
 
 
