@@ -5,7 +5,10 @@
 <p align="center">
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
+  <img src="https://static.thenounproject.com/png/linear-regression-icon-5237762-512.png" width="40"/>
   <img src="https://static.thenounproject.com/png/random-forest-icon-961660-512.png" width="40"/>
+  <img src="https://facebook.github.io/prophet/img/prophet-logo.svg" width="40"/>
+  <img src="https://static.thenounproject.com/png/k-means-icon-4998398-512.png" width="40"/>
 </p>
 
 Amazon Sales Forecasting is crucial for accurately predicting future customer demand. This allows for optimized inventory management, preventing costly overstocking and lost sales from stockouts. As a result, businesses can significantly reduce waste, improve cash flow, and maximize profitability. Simultaneously, Customer Analytics uncovers distinct purchasing behaviors and segments the customer base. This enables highly targeted marketing campaigns and personalized experiences, boosting customer loyalty and satisfaction. Ultimately, this dual approach empowers data-driven strategic decisions that drive sustainable growth.
