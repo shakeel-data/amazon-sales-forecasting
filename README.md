@@ -49,7 +49,7 @@ The project follows a structured, multi-stage workflow designed to transform raw
 |--------|------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | 1      | **Data Ingestion & Cleaning** | Load raw CSV, handle missing values, correct data types, and assess quality using Python.                       |
 | 2      | **Database Normalization**    | Convert flat files into a **relational schema** (customers, products, orders, sales) for integrity & efficiency.|
-| 3      | **BigQuery Integration**      | Upload normalized tables to **Google BigQuery** to serve as the single source of truth.                         |
+| 3      | **BigQuery Integration**      | Upload normalized tables via manually or python to **Google BigQuery** to serve as the single source of truth.                         |
 | 4      | **Advanced SQL Analysis**     | Run 20+ **SQL queries** for cohort analysis, RFM scores, and deep business insights.                           |
 | 5      | **Machine Learning Modeling** | - **Forecasting:** Linear Regression, Random Forest, Prophet<br> - **Segmentation:** KMeans for customer groups |
 | 6      | **Insight & Strategy**        | Translate analytical findings into **strategic recommendations** for growth.                                   |
