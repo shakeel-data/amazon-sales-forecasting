@@ -1102,9 +1102,9 @@ print(f"\nTop 5 Most Important Features:")
 print(feature_importance.head())
 ```
 <img width="1669" height="323" alt="image" src="https://github.com/user-attachments/assets/a3fdb5ce-7654-46a7-988a-67f0ff04ad4d" />
-**Linear Regression (Baseline)**
-   - **Performance**: R² = 0.72, RMSE = $1,247
-   - **Purpose**: Establish performance baseline
+#### *Linear Regression (Baseline)*
+- **Performance**: R² = 0.72, RMSE = $1,247
+- **Purpose**: Establish performance baseline
 
 ## 🌳 Random Forest
 ```python
@@ -1190,9 +1190,9 @@ plt.show()
 print("Key Insight: Random Forest significantly outperforms Linear Regression, indicating non-linear relationships in the data.")
 ```
 <img width="1489" height="1181" alt="image" src="https://github.com/user-attachments/assets/5ecd52df-fc10-45fd-946b-180f592c15db" />
-- **Random Forest (Advanced)**
-   - **Performance**: R² = 0.87, RMSE = $892
-   - **Purpose**: Capture non-linear relationships
+#### *Random Forest (Advanced)*
+- **Performance**: R² = 0.87, RMSE = $892
+- **Purpose**: Capture non-linear relationships
 
 ## 🔮 Facebook Prophet for Time Series Forecasting
 ```python
@@ -1265,9 +1265,9 @@ for _, row in future_predictions.head(6).iterrows():
 <img width="1254" height="701" alt="image" src="https://github.com/user-attachments/assets/f284568f-22ef-411a-ad5d-318bac4256e9" />
 <img width="887" height="590" alt="image" src="https://github.com/user-attachments/assets/a7985089-5d7e-446c-bc1e-4c902eeb17da" />
 <img width="1644" height="205" alt="image" src="https://github.com/user-attachments/assets/dad6543b-e462-4f3a-a918-4dd3a169e007" />
-- **Facebook Prophet (Time-Series)**
-   - **Performance**: 12-month forecast with seasonality
-   - **Purpose**: Long-term forecasting with seasonal patterns
+#### *Facebook Prophet (Time-Series)*
+- **Performance**: 12-month forecast with seasonality
+- **Purpose**: Long-term forecasting with seasonal patterns
 
 ## 👤 Customer Segmentation (Unsupervised ML)
 ```python
