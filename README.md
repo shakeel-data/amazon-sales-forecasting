@@ -29,18 +29,88 @@ This project provides a full-stack analytics solution, beginning with raw data i
 - Customer segment
 <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customer_segments.csv">csv</a>
 
+## 🔧 Project Workflow
+### 1. 📥 Load Packages and Data Ingestion
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+from prophet import Prophet
+from datetime import datetime
+import warnings
+warnings.filterwarnings('ignore')
+```
+### Load and inspect the dataset
+```python
+df = pd.read_csv('your-file-path')
+
+print(f"Dataset Shape: {df.shape}")
+```
+<img width="1484" height="39" alt="image" src="https://github.com/user-attachments/assets/c7a5e4e5-d874-463a-857e-7adc23e7a4ea" />
+
+### Basic dataset information
+```python
+print("Column Names and Data Types:")
+print(df.dtypes)
+print("\nFirst 5 rows:")
+df.head()
+```
+<img width="1500" height="511" alt="image" src="https://github.com/user-attachments/assets/8e0778df-70b2-4e57-9ab4-251de4013dde" />
+| Custkey  | DateKey    | Discount Amount | Invoice Date | Invoice Number | Item Class | Item Number | Item                       | Line Number | List Price | Order Number | Promised Delivery Date | Sales Amount | Sales Amount Based on List Price | Sales Cost Amount | Sales Margin Amount | Sales Price | Sales Quantity | Sales Rep | U/M |
+| -------- | ---------- | --------------- | ------------ | -------------- | ---------- | ----------- | -------------------------- | ----------- | ---------- | ------------ | ---------------------- | ------------ | -------------------------------- | ----------------- | ------------------- | ----------- | -------------- | --------- | --- |
+| 10016609 | 12/31/2019 | 398.73          | 2019/12/31   | 329568         | P01        | 15640       | Super Vegetable Oil        | 1000        | 163.47     | 122380       | 12/31/2019             | 418.62       | 817.35                           | 102.99            | 315.63              | 83.72400    | 5              | 176       | EA  |
+| 10016609 | 12/31/2019 | 268.67          | 2019/12/31   | 329569         | P01        | 31681       | Golden Fajita French Fries | 7000        | 275.37     | 123966       | 12/31/2019             | 282.07       | 550.74                           | 117.45            | 164.62              | 141.03500   | 2              | 176       | EA  |
+| 10016609 | 12/31/2019 | 398.73          | 2019/12/31   | 329569         | P01        | 15640       | Super Vegetable Oil        | 4000        | 163.47     | 123966       | 12/31/2019             | 418.62       | 817.35                           | 102.99            | 315.63              | 83.72400    | 5              | 176       | EA  |
+| 10016609 | 12/31/2019 | 466.45          | 2019/12/31   | 329569         | P01        | 13447       | High Top Oranges           | 3000        | 119.52     | 123966       | 12/31/2019             | 489.71       | 956.16                           | 213.29            | 276.42              | 61.21375    | 8              | 176       | EA  |
+| 10016609 | 12/31/2019 | 515.51          | 2019/12/31   | 329569         | P01        | 36942       | Tell Tale New Potatos      | 9000        | 264.18     | 123966       | 12/31/2019             | 541.21       | 1056.72                          | 290.56            | 250.65              | 135.30250   | 4              | 176       | EA  |
 
 
-## 🛠️ Tech Stack & Skills
+### Data quality assessment
+```python
+print("Missing Values:")
+missing_data = df.isnull().sum()
+missing_percent = (missing_data / len(df)) * 100
+missing_info = pd.DataFrame({
+    'Missing Count': missing_data,
+    'Missing %': missing_percent
+})
+print(missing_info[missing_info['Missing Count'] > 0])
 
-| Category              | Technologies & Skills                                                                                             |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Programming**       | Python (Pandas, NumPy, Matplotlib, Seaborn)                                                                       |
-| **Database & SQL**    | Google BigQuery, Advanced SQL (Window Functions, CTEs, Complex JOINs), Database Normalization                       |
-| **ML (Forecasting)**  | Scikit-learn (Linear Regression, RandomForestRegressor), Facebook Prophet                                         |
-| **ML (Segmentation)** | Scikit-learn (KMeans Clustering), PCA                                                                             |
-| **BI & Visualization**| Looker Studio (Integration-ready), Matplotlib, Seaborn                                                            |
-| **Core Competencies** | Data Cleaning, EDA, Feature Engineering, Predictive Modeling, Customer Segmentation (RFM), BI & Strategy          |
+print(f"\nDuplicate Rows: {df.duplicated().sum()}")
+print(f"Unique Invoice Numbers: {df['Invoice Number'].nunique()}")
+print(f"Total Rows: {len(df)}")
+```
+<img width="1566" height="230" alt="image" src="https://github.com/user-attachments/assets/87212729-b685-4b05-ac07-b5fc30abb614" />
+
+### Create additional features for analysis
+```python
+# Extract date components
+df['Year'] = df['Invoice Date'].dt.year
+df['Month'] = df['Invoice Date'].dt.month
+df['Quarter'] = df['Invoice Date'].dt.quarter
+df['Day_of_Week'] = df['Invoice Date'].dt.dayofweek
+df['Month_Year'] = df['Invoice Date'].dt.to_period('M')
+
+# Calculate profit margin percentage
+df['Profit_Margin_Pct'] = ((df['Sales Amount'] - df['Sales Cost Amount']) / df['Sales Amount']) * 100
+
+# Calculate delivery days
+df['Delivery_Days'] = (df['Promised Delivery Date'] - df['Invoice Date']).dt.days
+
+print("Feature engineering completed!")
+```
+
 
 ## 📊 Project Workflow
 
@@ -795,6 +865,15 @@ This project is designed for seamless integration with **Looker Studio**:
 - KPI definitions and business logic documented
 - Suggested visualizations and filters provided
 - Automated refresh capabilities planned
+## 🛠️ Tech Stack & Skills
 
+| Category              | Technologies & Skills                                                                                             |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Programming**       | Python (Pandas, NumPy, Matplotlib, Seaborn)                                                                       |
+| **Database & SQL**    | Google BigQuery, Advanced SQL (Window Functions, CTEs, Complex JOINs), Database Normalization                     |
+| **ML (Forecasting)**  | Scikit-learn (Linear Regression, RandomForestRegressor), Facebook Prophet                                         |
+| **ML (Segmentation)** | Scikit-learn (KMeans Clustering), PCA                                                                             |
+| **BI & Visualization**| Looker Studio (Integration-ready), Matplotlib, Seaborn                                                            |
+| **Core Competencies** | Data Cleaning, EDA, Feature Engineering, Predictive Modeling, Customer Segmentation (RFM), BI & Strategy          | 
 
 *This comprehensive analytics solution showcases the technical depth and business acumen required for senior data roles, positioning it as an exemplary portfolio piece for competitive data science positions.*
