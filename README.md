@@ -1,6 +1,26 @@
 # 🛒 Amazon Sales Forecasting Project | Python + Big Query + Machine Learning
 
 <img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
+<!-- Tech Stack Icons -->
+<p align="center">
+  <!-- Python -->
+  <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40" title="Python"/>
+  
+  <!-- BigQuery -->
+  <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40" title="Google BigQuery"/>
+  
+  <!-- Linear Regression (Math/Stats Icon Placeholder) -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Regression_line.svg" width="40" title="Linear Regression"/>
+  
+  <!-- Random Forest (Tree Icon) -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Tree_icon.svg" width="40" title="Random Forest"/>
+  
+  <!-- KMeans (Cluster Icon) -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Cluster_icon.svg" width="40" title="KMeans Clustering"/>
+  
+  <!-- Prophet (Facebook Logo since Prophet is FB tool) -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.svg" width="40" title="Prophet"/>
+</p>
 
 
 <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
