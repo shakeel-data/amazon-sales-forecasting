@@ -65,7 +65,7 @@ The project follows a structured, multi-stage workflow designed to transform raw
 | 2      | **Database Normalization**    | Convert flat files into a **relational schema** (customers, products, orders, sales) for integrity & efficiency.|
 | 3      | **BigQuery Integration**      | Upload normalized tables via manually or python to **Google BigQuery** to serve as the single source of truth.                         |
 | 4      | **Advanced SQL Analysis**     | Run 20+ **SQL queries** for cohort analysis, RFM scores, and deep business insights.                           |
-| 5      | **Machine Learning Modeling** | - **Forecasting:** Linear Regression, Random Forest, Prophet<br> - **Segmentation:** KMeans for customer groups |
+| 5      | **Machine Learning Modeling** | - **Forecasting:** Linear Regression, LightGBM, Prophet<br> - **Segmentation:** KMeans for customer groups |
 | 6      | **Insight & Strategy**        | Translate analytical findings into **strategic recommendations** for growth.                                   |
 ---
 
@@ -76,10 +76,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import lightgbm as lgb
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 from sklearn.cluster import KMeans
@@ -90,6 +90,32 @@ from prophet import Prophet
 from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
+
+# For better model evaluation and visualization
+from sklearn.model_selection import cross_val_score, TimeSeriesSplit
+from sklearn.metrics import mean_absolute_percentage_error
+
+# For feature engineering (very useful for sales forecasting)
+from sklearn.preprocessing import LabelEncoder, PolynomialFeatures
+
+# For saving models and results
+import pickle
+import joblib
+
+# For enhanced plotting and statistical analysis
+import plotly.express as px  # Interactive plots (optional)
+import plotly.graph_objects as go  # Interactive plots (optional)
+from scipy import stats
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# Configure plotting style
+plt.style.use('seaborn-v0_8')  # Modern seaborn style
+plt.rcParams['figure.figsize'] = (12, 8)
+plt.rcParams['font.size'] = 11
+
+print("All dependencies loaded successfully!")
 ```
 ### Load and inspect the dataset
 ```python
@@ -1119,39 +1145,59 @@ print(feature_importance.head())
 - **Performance**: R² = 0.72, RMSE = $1,247
 - **Purpose**: Establish performance baseline
 
-## 🌳 Random Forest
+## ⚡ LightGBM
 ```python
-print("\n RANDOM FOREST MODEL")
+print("\n LIGHTGBM MODEL")
 print("-" * 30)
 
-# Train Random Forest
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1)
-rf_model.fit(X_train, y_train)
+# Import LightGBM
+import lightgbm as lgb
+
+# Prepare dataset for LightGBM
+lgb_train = lgb.Dataset(X_train, label=y_train)
+lgb_eval = lgb.Dataset(X_test, label=y_test, reference=lgb_train)
+
+# Set parameters
+params = {
+    'objective': 'regression',
+    'metric': ['l1', 'rmse'],
+    'learning_rate': 0.1,
+    'num_leaves': 31,
+    'feature_fraction': 0.8,
+    'bagging_fraction': 0.8,
+    'bagging_freq': 5,
+    'verbose': -1
+}
+
+# Train LightGBM model
+lgbm_model = lgb.train(params, lgb_train,
+                      num_boost_round=1000,
+                      valid_sets=[lgb_train, lgb_eval])
 
 # Make predictions
-rf_pred = rf_model.predict(X_test)
+lgbm_pred = lgbm_model.predict(X_test, num_iteration=lgbm_model.best_iteration)
 
 # Calculate metrics
-rf_mae = mean_absolute_error(y_test, rf_pred)
-rf_mse = mean_squared_error(y_test, rf_pred)
-rf_rmse = np.sqrt(rf_mse)
-rf_r2 = r2_score(y_test, rf_pred)
+lgbm_mae = mean_absolute_error(y_test, lgbm_pred)
+lgbm_mse = mean_squared_error(y_test, lgbm_pred)
+lgbm_rmse = np.sqrt(lgbm_mse)
+lgbm_r2 = r2_score(y_test, lgbm_pred)
 
-print(f"Random Forest Results:")
-print(f"MAE: ${rf_mae:,.2f}")
-print(f"RMSE: ${rf_rmse:,.2f}")
-print(f"R² Score: {rf_r2:.4f}")
+print(f"LightGBM Results:")
+print(f"MAE: ${lgbm_mae:,.2f}")
+print(f"RMSE: ${lgbm_rmse:,.2f}")
+print(f"R² Score: {lgbm_r2:.4f}")
 
 # Feature importance
-rf_importance = pd.DataFrame({
+lgbm_importance = pd.DataFrame({
     'feature': feature_columns,
-    'importance': rf_model.feature_importances_
+    'importance': lgbm_model.feature_importance()
 }).sort_values('importance', ascending=False)
 
 print(f"\nTop 5 Most Important Features:")
-print(rf_importance.head())
+print(lgbm_importance.head())
 ```
-<img width="1626" height="324" alt="image" src="https://github.com/user-attachments/assets/5a3fb005-f3c4-4ad8-ac5f-288da30d6cb5" />
+<img width="1568" height="339" alt="image" src="https://github.com/user-attachments/assets/f9cf21aa-c3c7-4421-b0be-c6099286ae56" />
 
 ## 📊 Visualize Model Performance
 ```python
@@ -1159,37 +1205,37 @@ fig, axes = plt.subplots(2, 2, figsize=(15, 12))
 fig.suptitle('Sales Forecasting Model Performance', fontsize=16, fontweight='bold')
 
 # 1. Actual vs Predicted - Linear Regression
-axes[0,0].scatter(y_test, lr_pred, alpha=0.6)
+axes[0,0].scatter(y_test, lr_pred, alpha=0.6, color='blue')
 axes[0,0].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
 axes[0,0].set_xlabel('Actual Sales')
 axes[0,0].set_ylabel('Predicted Sales')
 axes[0,0].set_title(f'Linear Regression\nR² = {lr_r2:.4f}')
 
-# 2. Actual vs Predicted - Random Forest
-axes[0,1].scatter(y_test, rf_pred, alpha=0.6)
+# 2. Actual vs Predicted - LightGBM
+axes[0,1].scatter(y_test, lgbm_pred, alpha=0.6, color='green')
 axes[0,1].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
 axes[0,1].set_xlabel('Actual Sales')
 axes[0,1].set_ylabel('Predicted Sales')
-axes[0,1].set_title(f'Random Forest\nR² = {rf_r2:.4f}')
+axes[0,1].set_title(f'LightGBM\nR² = {lgbm_r2:.4f}')
 
-# 3. Feature Importance - Random Forest
-top_features = rf_importance.head(8)
-axes[1,0].barh(range(len(top_features)), top_features['importance'])
+# 3. Feature Importance - LightGBM
+top_features = lgbm_importance.head(8)
+axes[1,0].barh(range(len(top_features)), top_features['importance'], color='lightgreen')
 axes[1,0].set_yticks(range(len(top_features)))
 axes[1,0].set_yticklabels(top_features['feature'])
 axes[1,0].set_xlabel('Importance')
-axes[1,0].set_title('Random Forest Feature Importance')
+axes[1,0].set_title('LightGBM Feature Importance')
 
 # 4. Model Comparison
-models = ['Linear Regression', 'Random Forest']
-mae_scores = [lr_mae, rf_mae]
-rmse_scores = [lr_rmse, rf_rmse]
+models = ['Linear Regression', 'LightGBM']
+mae_scores = [lr_mae, lgbm_mae]
+rmse_scores = [lr_rmse, lgbm_rmse]
 
 x = np.arange(len(models))
 width = 0.35
 
-axes[1,1].bar(x - width/2, mae_scores, width, label='MAE', alpha=0.8)
-axes[1,1].bar(x + width/2, rmse_scores, width, label='RMSE', alpha=0.8)
+axes[1,1].bar(x - width/2, mae_scores, width, label='MAE', alpha=0.8, color='skyblue')
+axes[1,1].bar(x + width/2, rmse_scores, width, label='RMSE', alpha=0.8, color='lightcoral')
 axes[1,1].set_xlabel('Models')
 axes[1,1].set_ylabel('Error')
 axes[1,1].set_title('Model Performance Comparison')
@@ -1200,13 +1246,9 @@ axes[1,1].legend()
 plt.tight_layout()
 plt.show()
 
-print("Key Insight: Random Forest significantly outperforms Linear Regression, indicating non-linear relationships in the data.")
+print("Key Insight: LightGBM typically outperforms Linear Regression with faster training and better handling of non-linear relationships.")
 ```
-<img width="1489" height="1181" alt="image" src="https://github.com/user-attachments/assets/5ecd52df-fc10-45fd-946b-180f592c15db" />
-
-#### *Random Forest (Advanced)*
-- **Performance**: R² = 0.87, RMSE = $892
-- **Purpose**: Capture non-linear relationships
+<img width="1487" height="1179" alt="image" src="https://github.com/user-attachments/assets/6be61dce-9c9e-4b54-b440-cf4be9006c0b" />
 
 ## 🔮 Facebook Prophet for Time Series Forecasting
 ```python
@@ -1245,12 +1287,15 @@ forecast = prophet_model.predict(future)
 historical_pred = forecast[forecast['ds'].isin(prophet_data['ds'])]
 prophet_mae = mean_absolute_error(prophet_data['y'], historical_pred['yhat'])
 prophet_rmse = np.sqrt(mean_squared_error(prophet_data['y'], historical_pred['yhat']))
+prophet_r2 = r2_score(prophet_data['y'], historical_pred['yhat'])
+
 
 print(f"Prophet Time Series Results:")
 print(f"MAE: ${prophet_mae:,.2f}")
 print(f"RMSE: ${prophet_rmse:,.2f}")
+print(f"R² Score: {prophet_r2:.4f}")
 ```
-<img width="1776" height="381" alt="image" src="https://github.com/user-attachments/assets/33feb1b4-17e4-42b9-917a-296fda46891f" />
+<img width="1774" height="404" alt="image" src="https://github.com/user-attachments/assets/15466d4e-840d-4ab3-b9a7-a932ffb44aba" />
 
 ## 📶 Visualize Prophet Forecasting for 6 months
 ```python
@@ -1505,6 +1550,117 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 ```
 <img width="1342" height="672" alt="image" src="https://github.com/user-attachments/assets/16b3156e-d676-4a7e-8540-b66d012c0bf9" />
 
+## COMPLETE MODEL COMPARISON DASHBOARD
+```python
+# Create subplot grid (2 rows, 3 columns)
+fig, axes = plt.subplots(2, 3, figsize=(18, 12))
+fig.suptitle('Amazon Sales Forecasting - Complete Model Analysis Dashboard', fontsize=20, fontweight='bold')
+
+# Model performance data
+forecasting_models = ['Linear Regression', 'LightGBM', 'Prophet']
+r2_scores = [lr_r2, lgbm_r2, prophet_r2]
+mae_scores = [lr_mae, lgbm_mae, prophet_mae] 
+colors = ['#3498db', '#2ecc71', '#f39c12']
+
+# Plot 1: R² Score Comparison
+axes[0,0].bar(forecasting_models, r2_scores, color=colors, alpha=0.8)
+axes[0,0].set_title('R² Score Comparison', fontweight='bold')
+axes[0,0].set_ylabel('R² Score')
+axes[0,0].set_ylim(0, 1)
+for i, v in enumerate(r2_scores):
+    axes[0,0].text(i, v + 0.02, f'{v:.3f}', ha='center', fontweight='bold')
+
+# Plot 2: MAE Comparison  
+axes[0,1].bar(forecasting_models, mae_scores, color=colors, alpha=0.8)
+axes[0,1].set_title('MAE Comparison', fontweight='bold')
+axes[0,1].set_ylabel('Mean Absolute Error ($)')
+for i, v in enumerate(mae_scores):
+    axes[0,1].text(i, v + max(mae_scores)*0.02, f'${v:,.0f}', ha='center', fontweight='bold')
+
+# Plot 3: Best Model Actual vs Predicted
+best_model_idx = np.argmax(r2_scores)
+best_pred = [lr_pred, lgbm_pred, historical_pred['yhat']][best_model_idx]
+best_name = forecasting_models[best_model_idx]
+
+# Select appropriate actual values based on best model
+actual_values = y_test if best_name != 'Prophet' else prophet_data['y']
+
+axes[0,2].scatter(actual_values, best_pred, alpha=0.6, color=colors[best_model_idx], s=50)
+axes[0,2].plot([actual_values.min(), actual_values.max()], [actual_values.min(), actual_values.max()], 'r--', lw=2)
+axes[0,2].set_xlabel('Actual Sales ($)')
+axes[0,2].set_ylabel('Predicted Sales ($)')
+axes[0,2].set_title(f'Best Model: {best_name}\nR² = {r2_scores[best_model_idx]:.3f}', fontweight='bold')
+
+# Plot 4: LightGBM Feature Importance
+top_features = lgbm_importance.head(6)
+axes[1,0].barh(top_features['feature'], top_features['importance'], color='#2ecc71', alpha=0.8)
+axes[1,0].set_title('LightGBM Feature Importance', fontweight='bold')
+axes[1,0].set_xlabel('Importance Score')
+
+# Plot 5: Prophet Forecast with Confidence Intervals
+axes[1,1].plot(forecast['ds'], forecast['yhat'], color='#f39c12', linewidth=2, label='Forecast')
+axes[1,1].fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], 
+                      alpha=0.3, color='#f39c12')
+axes[1,1].plot(prophet_data['ds'], prophet_data['y'], 'o', color='#3498db', alpha=0.6, label='Historical')
+axes[1,1].set_title('Prophet Time Series Forecast', fontweight='bold')
+axes[1,1].set_xlabel('Date')
+axes[1,1].set_ylabel('Sales ($)')
+axes[1,1].legend()
+
+# Plot 6: K-Means Customer Segmentation (PCA Visualization)
+pca_2d = PCA(n_components=2)
+customer_pca = pca_2d.fit_transform(X_scaled)
+scatter = axes[1,2].scatter(customer_pca[:, 0], customer_pca[:, 1], 
+                           c=cluster_labels, cmap='viridis', alpha=0.6, s=50)
+axes[1,2].set_title('K-Means Customer Segmentation\n(PCA Visualization)', fontweight='bold')
+axes[1,2].set_xlabel('First Principal Component')
+axes[1,2].set_ylabel('Second Principal Component')
+
+# Add cluster centers to PCA plot
+centers_pca = pca_2d.transform(kmeans_final.cluster_centers_)
+axes[1,2].scatter(centers_pca[:, 0], centers_pca[:, 1], 
+                 c='red', marker='x', s=200, linewidths=3, label='Centroids')
+axes[1,2].legend()
+
+plt.tight_layout()
+plt.show()
+
+# Performance Summary Table
+print("\n" + "="*60)
+print("MODEL PERFORMANCE SUMMARY")  
+print("="*60)
+
+summary_data = {
+    'Model': ['Linear Regression', 'LightGBM', 'Prophet', 'K-Means'],
+    'Type': ['Supervised', 'Supervised', 'Time Series', 'Unsupervised'],
+    'R² Score': [f'{lr_r2:.3f}', f'{lgbm_r2:.3f}', f'{prophet_r2:.3f}', 'N/A'],
+    'MAE': [f'${lr_mae:,.0f}', f'${lgbm_mae:,.0f}', f'${prophet_mae:,.0f}', 'N/A'],
+    'Best For': ['Baseline', 'Accuracy', 'Seasonality', 'Segmentation']
+}
+
+summary_df = pd.DataFrame(summary_data)
+print(summary_df.to_string(index=False))
+
+# Key Insights
+print("\nKEY INSIGHTS:")
+print(f"• Best performing model: {best_name} (R² = {r2_scores[best_model_idx]:.3f})")
+print(f"• Lowest prediction error: {forecasting_models[np.argmin(mae_scores)]} (MAE = ${min(mae_scores):,.0f})")
+print(f"• Customer segments identified: {optimal_k} distinct groups")
+print(f"• Prophet captures seasonality with {prophet_r2:.1%} accuracy")
+
+# Business Impact Calculations
+improvement_over_baseline_r2 = ((max(r2_scores) - min(r2_scores)) / min(r2_scores)) * 100 if min(r2_scores) != 0 else float('inf')
+error_reduction_mae = ((max(mae_scores) - min(mae_scores)) / max(mae_scores)) * 100 if max(mae_scores) != 0 else 0
+
+print(f"\nBUSINESS IMPACT:")
+print(f"• {improvement_over_baseline_r2:.1f}% improvement in prediction accuracy (based on R²)")
+print(f"• ${max(mae_scores) - min(mae_scores):,.0f} reduction in forecast error")
+print(f"• {error_reduction_mae:.1f}% decrease in prediction uncertainty")
+print("="*60)
+```
+<img width="1787" height="1179" alt="image" src="https://github.com/user-attachments/assets/6830778f-970a-4e77-a20e-7226a5e71a21" />
+<img width="1624" height="466" alt="image" src="https://github.com/user-attachments/assets/1fe756e9-f93d-45b6-8136-2f93259bc087" />
+
 ## 💡 Key Insights & Business Impact
 
 |  Area                |  Insight                                                                 |  Strategic Recommendation                                                                                 |
@@ -1512,7 +1668,7 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 | 📈 **Sales Performance** | Q4 sales are **35% higher** than other quarters due to seasonality.       | Optimize **inventory and marketing** spend in Q3 to prepare for Q4 surge.                                   |
 | 🛒 **Product Analysis**   | Premium organic products have the **highest margins (avg. 23%)**.        | Expand **premium product line** and feature these items in campaigns.                                       |
 | 👥 **Customer Behavior**  | **23%** of customers are "At-Risk" (90+ days no purchase).              | Launch **personalized re-engagement campaigns** to win them back.                                          |
-| 🔮 **Forecasting**        | Random Forest predicts **8% sales growth** over next 6 months (R² = 0.87). | Adjust **financial targets** and resource allocation to align with predicted growth.                       |
+| 🔮 **Forecasting**        | LightGBM predicts **8% sales growth** over next 6 months (R² = 0.88). | Adjust **financial targets and resource allocation** to align with predicted growth.                       |
 
 ## 📊 Visualizations Created
 
@@ -1523,6 +1679,7 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 5. **Correlation Heatmap** - Feature relationships
 6. **Forecasting Plots** - Actual vs predicted with confidence intervals
 7. **Cluster Visualization** - Customer segments in 2D space
+8. **Final Dashbaord** - Comparing all models `Linear Regression`, `LightGBM`, `Prophet`, `KMeans`
 
 ## ⚙ Tools and Technologies
 - **Kaggle** – Data Source
@@ -1533,7 +1690,7 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
   - Libraries: `bigquery`, `os`
 - **Machine Learning** – Model development and evaluation
   - Scikit-learn: `train_test_split`, `StandardScaler`
-  - **Models**: `LinearRegression`, `RandomForestRegressor`, `Prophet`, `KMeans`
+  - **Models**: `LinearRegression`, `LightGBM`, `Prophet`, `KMeans`
 
 ## 🎯 Conclusion
 This project successfully demonstrates a complete data analytics workflow by transforming raw Amazon sales data into actionable business intelligence. By leveraging Python, advanced SQL, and machine learning, we developed a robust sales forecasting model with 87% accuracy and segmented customers into four distinct personas. The key findings reveal significant seasonal trends and identify high-value customer groups, providing a clear roadmap for strategic decisions. The insights derived empower the business to optimize inventory, personalize marketing efforts, and ultimately drive significant revenue growth.
