@@ -1262,7 +1262,7 @@ for _, row in future_predictions.head(6).iterrows():
     print(f"{row['ds'].strftime('%Y-%m')}: ${row['yhat']:,.0f} "
           f"(Range: ${row['yhat_lower']:,.0f} - ${row['yhat_upper']:,.0f})")
 ```
-<img width="1254" height="701" alt="image" src="https://github.com/user-attachments/assets/5906cb55-6c42-4e57-a97f-b34ac5c5d166" />
+<img width="887" height="590" alt="image" src="https://github.com/user-attachments/assets/a7985089-5d7e-446c-bc1e-4c902eeb17da" />
 <img width="1644" height="205" alt="image" src="https://github.com/user-attachments/assets/dad6543b-e462-4f3a-a918-4dd3a169e007" />
 - **Facebook Prophet (Time-Series)**
    - **Performance**: 12-month forecast with seasonality
