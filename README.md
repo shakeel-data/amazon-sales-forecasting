@@ -11,6 +11,10 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
 
+<img src="https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_scikit.svg" width="40" alt="KMeans"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/260px-Scikit_learn_logo_small.svg.png" width="40" alt="KMeans"/>
+<img src="https://img.shields.io/badge/KMeans-9C27B0?style=flat-square&logo=scipy&logoColor=white" width="60" alt="KMeans"/>
+<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/googleanalytics.svg" width="40" alt="KMeans" style="filter: invert(1);"/>
 
 
 
