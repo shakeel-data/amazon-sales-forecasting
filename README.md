@@ -5,18 +5,13 @@
 <p align="center">
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
-  <a href="https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html" target="_blank" rel="noreferrer">
-  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/scikitlearn/scikitlearn-original.svg" alt="Random Forest" width="40" height="40"/>
-</a>
-<a href="https://facebook.github.io/prophet/" target="_blank" rel="noreferrer">
-  <img src="https://facebook.github.io/prophet/img/prophet-logo.svg" alt="Prophet" width="40" height="40"/>
-</a>
-<a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html" target="_blank" rel="noreferrer">
-  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/scikitlearn/scikitlearn-original.svg" alt="Linear Regression" width="40" height="40"/>
-</a>
-<a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html" target="_blank" rel="noreferrer">
-  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/scikitlearn/scikitlearn-original.svg" alt="K-Means" width="40" height="40"/>
-</a>
+  <p align="left">
+  <img src="https://img.shields.io/badge/Random%20Forest-4DAF4A?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Random Forest"/>
+  <img src="https://img.shields.io/badge/Prophet-007BFF?style=for-the-badge&logo=facebook&logoColor=white" alt="Prophet"/>
+  <img src="https://img.shields.io/badge/Linear%20Regression-FF7F00?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Linear Regression"/>
+  <img src="https://img.shields.io/badge/KMeans-984EA3?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="KMeans"/>
+</p>
+
 </p>
 
 Amazon Sales Forecasting is crucial for accurately predicting future customer demand. This allows for optimized inventory management, preventing costly overstocking and lost sales from stockouts. As a result, businesses can significantly reduce waste, improve cash flow, and maximize profitability. Simultaneously, Customer Analytics uncovers distinct purchasing behaviors and segments the customer base. This enables highly targeted marketing campaigns and personalized experiences, boosting customer loyalty and satisfaction. Ultimately, this dual approach empowers data-driven strategic decisions that drive sustainable growth.
