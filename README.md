@@ -84,7 +84,7 @@ print(f"Dataset Shape: {df.shape}")
 ```
 <img width="1484" height="39" alt="image" src="https://github.com/user-attachments/assets/c7a5e4e5-d874-463a-857e-7adc23e7a4ea" />
 
-#### Basic dataset information
+### Basic dataset information
 ```python
 print("Column Names and Data Types:")
 print(df.dtypes)
@@ -1051,7 +1051,7 @@ ml_data.head()
 | 2017-12-01  | American Beef Bologna | P01      | 239.33       | 20       | 11.966500 | 25.14      | 263.47   | 74.97  | 2017 | 12        | 4       | 239.33      | 362.02      | 362.02      | 280.226667     |
 
 
-## Linear Regression
+## 📈 Linear Regression
 ```python
 print("LINEAR REGRESSION MODEL")
 print("-" * 30)
@@ -1098,8 +1098,11 @@ print(f"\nTop 5 Most Important Features:")
 print(feature_importance.head())
 ```
 <img width="1669" height="323" alt="image" src="https://github.com/user-attachments/assets/a3fdb5ce-7654-46a7-988a-67f0ff04ad4d" />
+**Linear Regression (Baseline)**
+   - **Performance**: R² = 0.72, RMSE = $1,247
+   - **Purpose**: Establish performance baseline
 
-## Random Forest
+## 🌳 Random Forest
 ```python
 print("\n RANDOM FOREST MODEL")
 print("-" * 30)
@@ -1183,8 +1186,11 @@ plt.show()
 print("Key Insight: Random Forest significantly outperforms Linear Regression, indicating non-linear relationships in the data.")
 ```
 <img width="1489" height="1181" alt="image" src="https://github.com/user-attachments/assets/5ecd52df-fc10-45fd-946b-180f592c15db" />
+**Random Forest (Advanced)**
+   - **Performance**: R² = 0.87, RMSE = $892
+   - **Purpose**: Capture non-linear relationships
 
-## Facebook Prophet for Time Series Forecasting
+## 🔮 Facebook Prophet for Time Series Forecasting
 ```python
 print("\nFACEBOOK PROPHET TIME SERIES FORECASTING")
 print("-" * 50)
@@ -1254,7 +1260,9 @@ for _, row in future_predictions.head(6).iterrows():
 ```
 <img width="1254" height="701" alt="image" src="https://github.com/user-attachments/assets/5906cb55-6c42-4e57-a97f-b34ac5c5d166" />
 <img width="1644" height="205" alt="image" src="https://github.com/user-attachments/assets/dad6543b-e462-4f3a-a918-4dd3a169e007" />
-
+**Facebook Prophet (Time-Series)**
+   - **Performance**: 12-month forecast with seasonality
+   - **Purpose**: Long-term forecasting with seasonal patterns
 
 ## Customer Segmentation (Unsupervised ML)
 ```python
@@ -1482,24 +1490,9 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 ### Sales Forecasting
 Three different models were developed to forecast sales:
 
-1. **Linear Regression (Baseline)**
-   - **Performance**: R² = 0.72, RMSE = $1,247
-   - **Purpose**: Establish performance baseline
+1. 
 
-2. **Random Forest (Advanced)**
-   - **Performance**: R² = 0.87, RMSE = $892
-   - **Purpose**: Capture non-linear relationships
 
-3. **Facebook Prophet (Time-Series)**
-   - **Performance**: 12-month forecast with seasonality
-   - **Purpose**: Long-term forecasting with seasonal patterns
-
-### Customer Segmentation
-**KMeans Clustering** segmented customers into four personas:
-- **VIP Customers** (12%): High-value, frequent buyers
-- **Loyal Customers** (45%): Consistent, regular purchasers
-- **At-Risk Customers** (23%): Haven't purchased recently
-- **New/Budget Customers** (20%): Recent or infrequent buyers
 
 ## 🔍 Key Findings & Insights
 
