@@ -12,9 +12,6 @@
 </p>
 
 <img src="https://static.thenounproject.com/png/2424487-200.png" width="40" alt="KMeans Clustering"/>
-<img src="https://www.svgrepo.com/show/372294/cluster.svg" width="40" alt="KMeans Clustering"/>
-<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="40" alt="KMeans Clustering"/>
-<img src="https://img.shields.io/badge/K--Means-FF6B35?style=flat-square&logo=databricks&logoColor=white" width="70" alt="KMeans"/>
 
 
 
