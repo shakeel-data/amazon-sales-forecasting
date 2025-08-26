@@ -1,6 +1,6 @@
 # 📦 Amazon Sales Forecasting Project | Python + Big Query + Machine Learning
 
-<img width="2048" height="2048" alt="Google_AI_Studio_2025-08-26T16_55_52 752Z" src="https://github.com/user-attachments/assets/e9bec558-9723-46fe-a580-0d8ca544c14e" />
+<img width="2048" height="2048" alt="Google_AI_Studio_2025-08-26T16_55_52 752Z new" src="https://github.com/user-attachments/assets/86e5a2b1-37d4-41ae-8b67-67dd6c5f8159" />
 
 <p align="center">
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
