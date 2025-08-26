@@ -11,8 +11,6 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
 
-<img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/forestry.svg" width="40" alt="Random Forest" style="filter: invert(1);"/>
-<img src="https://img.shields.io/badge/Random_Forest-228B22?style=flat-square&logo=tree&logoColor=white" width="70" alt="Random Forest"/>
 
 
 
