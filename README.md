@@ -40,18 +40,20 @@ This project provides a full-stack analytics solution, beginning with raw data i
 git clone https://github.com/shakeel-data/amazon-sales-forecasting.git
 cd amazon-sales-forecasting
 ```
----
-## 📊 Project breakdown in Simple steps
 
+---
+## 📊 Project Breakdown – Simple Steps
 The project follows a structured, multi-stage workflow designed to transform raw data into high-value business intelligence.
-1. **Data Ingestion & Cleaning**: Load the raw CSV, handle missing values, correct data types, and perform initial quality assessment using Python.
-2. **Database Normalization**: Deconstruct the flat file into a relational schema with four distinct tables (`customers`, `products`, `orders`, `sales`) to ensure data integrity and query efficiency.
-3. **BigQuery Integration**: Upload the normalized tables to Google BigQuery to serve as the single source of truth for all subsequent analysis.
-4. **Advanced SQL Analysis**: Execute over 20 complex SQL queries to perform cohort analysis, calculate RFM scores, and uncover deep business trends.
-5. **Machine Learning Modeling**:
-   - **Forecasting**: Develop three models (Linear Regression, Random Forest, Prophet) to predict future sales.
-   - **Segmentation**: Apply KMeans clustering to segment customers based on their purchasing behavior.
-6. **Insight Generation & Strategy**: Synthesize analytical findings into strategic business recommendations.
+
+| 🔢 Step | 🚀 Stage                       | 📝 Description                                                                                                     |
+|--------|------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| 1      | **Data Ingestion & Cleaning** | Load raw CSV, handle missing values, correct data types, and assess quality using Python.                       |
+| 2      | **Database Normalization**    | Convert flat files into a **relational schema** (customers, products, orders, sales) for integrity & efficiency.|
+| 3      | **BigQuery Integration**      | Upload normalized tables to **Google BigQuery** to serve as the single source of truth.                         |
+| 4      | **Advanced SQL Analysis**     | Run 20+ **SQL queries** for cohort analysis, RFM scores, and deep business insights.                           |
+| 5      | **Machine Learning Modeling** | - **Forecasting:** Linear Regression, Random Forest, Prophet<br> - **Segmentation:** KMeans for customer groups |
+| 6      | **Insight & Strategy**        | Translate analytical findings into **strategic recommendations** for growth.                                   |
+
 ---
 
 ## 🔧 Project Workflow
