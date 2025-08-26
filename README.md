@@ -405,7 +405,7 @@ SELECT
     registration_date,
     -- Calculate days since registration
     DATE_DIFF(CURRENT_DATE(), registration_date, DAY) as days_as_customer
-FROM `your-project-id.amazon_sales_analysis.customers`
+FROM `your-project-id.your-dataset-id.customers`
 ORDER BY registration_date DESC
 LIMIT 10;
 ```
@@ -425,7 +425,7 @@ SELECT
         WHEN list_price > 200 THEN 'Premium'
         ELSE 'Unknown'
     END as price_category
-FROM `your-project-id.amazon_sales_analysis.products`
+FROM `your-project-id.your-dataset-id.products`
 WHERE list_price IS NOT NULL
 ORDER BY list_price DESC;
 ```
@@ -439,9 +439,9 @@ SELECT
   ROUND(SUM(s.sales_amount), 2) AS total_revenue,
   ROUND(AVG(s.sales_amount), 2) AS avg_order_value
 FROM
-  `your-project-id.amazon_sales_analysis.orders` AS o
+  `your-project-id.your-dataset-id.orders` AS o
   JOIN
-  `your-project-id.amazon_sales_analysis.sales` AS s
+  `your-project-id.your-dataset-id.sales` AS s
   ON o.order_id = s.order_id
 GROUP BY year, month
 ORDER BY year DESC, month DESC;
@@ -459,8 +459,8 @@ SELECT
     MIN(o.order_date) as first_purchase,
     MAX(o.order_date) as last_purchase
 FROM `your-project-id.amazon_sales_analysis.customers` c
-INNER JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
-INNER JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+INNER JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
+INNER JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 GROUP BY c.customer_name, c.email
 ORDER BY lifetime_value DESC
 LIMIT 20;
@@ -481,8 +481,8 @@ SELECT
         ELSE 'Repeat Customer'
     END as customer_status
 FROM `your-project-id.amazon_sales_analysis.customers` c
-LEFT JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
-LEFT JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+LEFT JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
+LEFT JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 GROUP BY c.customer_name, c.email, c.registration_date, o.customer_id
 ORDER BY lifetime_value DESC;
 ```
@@ -497,8 +497,8 @@ SELECT
     COALESCE(COUNT(s.product_id), 0) as times_sold,
     COALESCE(ROUND(SUM(s.sales_amount), 2), 0) as total_revenue,
     COALESCE(ROUND(AVG(s.unit_price), 2), p.list_price) as avg_selling_price
-FROM `your-project-id.amazon_sales_analysis.sales` s
-RIGHT JOIN `your-project-id.amazon_sales_analysis.products` p ON s.product_id = p.product_id
+FROM `your-project-id.your-dataset-id.sales` s
+RIGHT JOIN `your-project-id.your-dataset-id.products` p ON s.product_id = p.product_id
 GROUP BY p.product_name, p.category, p.list_price
 ORDER BY total_revenue DESC;
 ```
@@ -520,9 +520,9 @@ SELECT
         ELSE 'Complete'
     END as data_quality
 FROM `your-project-id.amazon_sales_analysis.orders` o
-FULL OUTER JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
-LEFT JOIN `your-project-id.amazon_sales_analysis.customers` c ON o.customer_id = c.Custkey
-LEFT JOIN `your-project-id.amazon_sales_analysis.products` p ON s.product_id = p.product_id
+FULL OUTER JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
+LEFT JOIN `your-project-id.your-dataset-id.customers` c ON o.customer_id = c.Custkey
+LEFT JOIN `your-project-id.your-dataset-id.products` p ON s.product_id = p.product_id
 WHERE COALESCE(o.order_id, s.order_id) IS NOT NULL
 ORDER BY COALESCE(o.order_date, '1900-01-01') DESC;
 ```
@@ -541,9 +541,9 @@ SELECT
     PERCENT_RANK() OVER (ORDER BY SUM(s.sales_amount)) as revenue_percentile,
     -- Revenue quartiles
     NTILE(4) OVER (ORDER BY SUM(s.sales_amount)) as revenue_quartile
-FROM `your-project-id.amazon_sales_analysis.customers` c
-JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
-JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+FROM `your-project-id.your-dataset-id.customers` c
+JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
+JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 GROUP BY c.customer_name
 ORDER BY total_revenue DESC;
 ```
@@ -574,8 +574,8 @@ FROM (
         o.order_date,
         o.order_id,
         SUM(s.sales_amount) as daily_revenue
-    FROM `your-project-id.amazon_sales_analysis.orders` o
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    FROM `your-project-id.your-dataset-id.orders` o
+    JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
     GROUP BY o.order_date, o.order_id
 ) daily_data
 GROUP BY order_date
@@ -595,8 +595,8 @@ SELECT
     ROUND(SUM(s.sales_amount) - AVG(SUM(s.sales_amount)) OVER (PARTITION BY p.category), 2) as revenue_vs_category_avg,
     -- Rank within category
     ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY SUM(s.sales_amount) DESC) as category_rank
-FROM `your-project-id.amazon_sales_analysis.products` p
-JOIN `your-project-id.amazon_sales_analysis.sales` s ON p.product_id = s.product_id
+FROM `your-project-id.your-dataset-id.products` p
+JOIN `your-project-id.your-dataset-id.sales` s ON p.product_id = s.product_id
 GROUP BY p.category, p.product_name
 ORDER BY p.category, product_revenue DESC;
 ```
@@ -615,9 +615,9 @@ WITH customer_metrics AS (
         COUNT(DISTINCT o.order_id) as total_orders,
         -- Monetary: Total spent
         ROUND(SUM(s.sales_amount), 2) as total_spent
-    FROM `your-project-id.amazon_sales_analysis.customers` c
-    JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    FROM `your-project-id.your-dataset-id.customers` c
+    JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
+    JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
     GROUP BY c.Custkey, c.customer_name
 ),
 rfm_scores AS (
@@ -666,8 +666,8 @@ FROM (
         ROUND(SUM(s.sales_amount), 2) as total_revenue,
         SUM(s.quantity) as units_sold,
         ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY SUM(s.sales_amount) DESC) as category_rank
-    FROM `your-project-id.amazon_sales_analysis.products` p
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON p.product_id = s.product_id
+    FROM `your-project-id.your-dataset-id.products` p
+    JOIN `your-project-id.your-dataset-id.sales` s ON p.product_id = s.product_id
     GROUP BY p.category, p.product_name
 ) ranked_products
 WHERE category_rank <= 3  -- Top 3 products per category
@@ -683,8 +683,8 @@ WITH monthly_sales AS (
         EXTRACT(MONTH FROM o.order_date) as month,
         COUNT(DISTINCT o.order_id) as orders,
         ROUND(SUM(s.sales_amount), 2) as revenue
-    FROM `your-project-id.amazon_sales_analysis.orders` o
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    FROM `your-project-id.your-dataset-id.orders` o
+    JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
     GROUP BY year, month
 ),
 growth_analysis AS (
@@ -731,8 +731,8 @@ WITH customer_orders AS (
         o.order_date,
         ROW_NUMBER() OVER (PARTITION BY c.Custkey ORDER BY o.order_date) as order_sequence,
         MIN(o.order_date) OVER (PARTITION BY c.Custkey) as first_order_date
-    FROM `your-project-id.amazon_sales_analysis.customers` c
-    JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
+    FROM `your-project-id.your-dataset-id.customers` c
+    JOIN `your-project-id.your-dataset-id` o ON c.Custkey = o.customer_id
 ),
 cohort_data AS (
     SELECT 
@@ -767,8 +767,8 @@ WITH product_revenue AS (
         p.product_id,
         p.product_name,
         ROUND(SUM(s.sales_amount), 2) as total_revenue
-    FROM `your-project-id.amazon_sales_analysis.products` p
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON p.product_id = s.product_id
+    FROM `your-project-id.your-dataset-id.products` p
+    JOIN `your-project-id.your-dataset-ids.sales` s ON p.product_id = s.product_id
     GROUP BY p.product_id, p.product_name
 ),
 revenue_analysis AS (
@@ -807,12 +807,12 @@ SELECT
     ROUND(SUM(order_totals.order_value) / COUNT(DISTINCT o.customer_id), 2) as sales_per_customer,
     -- Ranking
     RANK() OVER (ORDER BY SUM(order_totals.order_value) DESC) as sales_rank
-FROM `your-project-id.amazon_sales_analysis.orders` o
+FROM `your-project-id.your-dataset-id.orders` o
 JOIN (
     SELECT 
         order_id,
         SUM(sales_amount) as order_value
-    FROM `your-project-id.amazon_sales_analysis.sales`
+    FROM `your-project-id.your-dataset-id.sales`
     GROUP BY order_id
 ) order_totals ON o.order_id = order_totals.order_id
 WHERE o.sales_rep IS NOT NULL
@@ -835,9 +835,9 @@ WITH customer_behavior AS (
         ROUND(AVG(s.sales_amount), 2) as avg_order_value,
         DATE_DIFF(MAX(o.order_date), MIN(o.order_date), DAY) + 1 as customer_lifespan_days,
         DATE_DIFF(CURRENT_DATE(), MAX(o.order_date), DAY) as days_since_last_order
-    FROM `your-project-id.amazon_sales_analysis.customers` c
-    JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    FROM `your-project-id.your-dataset-id.customers` c
+    JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
+    JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
     GROUP BY c.Custkey, c.customer_name, c.registration_date
 )
 SELECT 
@@ -882,8 +882,8 @@ SELECT
         (SUM(s.sales_amount) - AVG(SUM(s.sales_amount)) OVER ()) / 
         AVG(SUM(s.sales_amount)) OVER () * 100, 2
     ) as variance_from_avg_percent
-FROM `your-project-id.amazon_sales_analysis.orders` o
-JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+FROM `your-project-id.your-dataset-id.orders` o
+JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 GROUP BY month, month_name
 ORDER BY month;
 ```
@@ -896,8 +896,8 @@ WITH order_products AS (
         s1.order_id,
         s1.product_id as product_a,
         s2.product_id as product_b
-    FROM `your-project-id.amazon_sales_analysis.sales` s1
-    JOIN `your-project-id.amazon_sales_analysis.sales` s2 
+    FROM `your-project-id.your-dataset-id.sales` s1
+    JOIN `your-project-id.your-dataset-id.sales` s2 
         ON s1.order_id = s2.order_id 
         AND s1.product_id < s2.product_id  -- Avoid duplicates
 ),
@@ -917,11 +917,11 @@ SELECT
     -- Calculate support (percentage of orders containing both items)
     ROUND(
         pp.times_bought_together / 
-        (SELECT COUNT(DISTINCT order_id) FROM `your-project-id.amazon_sales_analysis.sales`) * 100, 2
+        (SELECT COUNT(DISTINCT order_id) FROM `your-project-id.your-dataset-id.sales`) * 100, 2
     ) as support_percent
 FROM product_pairs pp
-JOIN `your-project-id.amazon_sales_analysis.products` pa ON pp.product_a = pa.product_id
-JOIN `your-project-id.amazon_sales_analysis.products` pb ON pp.product_b = pb.product_id
+JOIN `your-project-id.your-dataset-id.products` pa ON pp.product_a = pa.product_id
+JOIN `your-project-id.your-dataset-id.products` pb ON pp.product_b = pb.product_id
 ORDER BY times_bought_together DESC
 LIMIT 20;
 ```
@@ -935,8 +935,8 @@ WITH daily_sales AS (
         COUNT(DISTINCT o.order_id) as orders,
         ROUND(SUM(s.sales_amount), 2) as revenue,
         COUNT(DISTINCT o.customer_id) as unique_customers
-    FROM `your-project-id.amazon_sales_analysis.orders` o
-    JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    FROM `your-project-id.your-dataset-id.orders` o
+    JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
     GROUP BY o.order_date
 )
 SELECT 
@@ -973,10 +973,10 @@ WITH summary_stats AS (
         ROUND(SUM(s.sales_amount), 2) as total_revenue,
         ROUND(AVG(s.sales_amount), 2) as avg_order_value,
         COUNT(DISTINCT o.sales_rep) as active_sales_reps
-    FROM `your-project-id.amazon_sales_analysis.customers` c
-    CROSS JOIN `your-project-id.amazon_sales_analysis.products` p
-    LEFT JOIN `your-project-id.amazon_sales_analysis.orders` o ON c.Custkey = o.customer_id
-    LEFT JOIN `your-project-id.amazon_sales_analysis.sales` s ON o.order_id = s.order_id
+    FROM `your-project-id.your-dataset-id.customers` c
+    CROSS JOIN `your-project-id.your-dataset-id.products` p
+    LEFT JOIN `your-project-id.your-dataset-id.orders` o ON c.Custkey = o.customer_id
+    LEFT JOIN `your-project-id.your-dataset-id.sales` s ON o.order_id = s.order_id
 )
 SELECT 
     'Total Customers' as metric, CAST(total_customers as STRING) as value
