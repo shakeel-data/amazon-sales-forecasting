@@ -1510,6 +1510,7 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 - **Python** – Data analysis, Manipulation and Visualization
   - Libraries: `numpy`, `pandas`, `matplotlib`, `seaborn`
 - **Big Query** – Database management used for data storage and queries
+  - Libraries: `bigquery`, `os`
 - **Machine Learning** – Model development and evaluation
   - Scikit-learn: `train_test_split`, `StandardScaler`
   - **Models**: `LinearRegression`, `RandomForestRegressor`, `Prophet`, `KMeans`
