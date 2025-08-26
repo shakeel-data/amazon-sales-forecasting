@@ -2,14 +2,6 @@
 
 <img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
 
-<img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
-<img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
-
-<p>
-  <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
-  <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
-</p>
-
 <p align="center">
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
