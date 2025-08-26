@@ -7,14 +7,9 @@
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="60" alt="KMeans"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
-  <img src="https://github.com/user-attachments/assets/e35b27ca-31c4-423f-86d1-1ec31f3df60f" width="40" alt="Custom Image"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
   <img src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" width="40" alt="KMeans Clustering"/>
 </p>
-
-
-
-
 
 Amazon Sales Forecasting is crucial for accurately predicting future customer demand. This allows for optimized inventory management, preventing costly overstocking and lost sales from stockouts. As a result, businesses can significantly reduce waste, improve cash flow, and maximize profitability. Simultaneously, Customer Analytics uncovers distinct purchasing behaviors and segments the customer base. This enables highly targeted marketing campaigns and personalized experiences, boosting customer loyalty and satisfaction. Ultimately, this dual approach empowers data-driven strategic decisions that drive sustainable growth.
 
@@ -49,7 +44,7 @@ This project provides a full-stack analytics solution, beginning with raw data i
 - A GCP service account key (`.json` file) with BigQuery User & Data Editor roles.
 
 ### Installation & Execution
-1. **Clone the repository:**
+**Clone the repository:**
 ```
 git clone https://github.com/shakeel-data/amazon-sales-forecasting.git
 cd amazon-sales-forecasting
@@ -1550,7 +1545,7 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 ```
 <img width="1342" height="672" alt="image" src="https://github.com/user-attachments/assets/16b3156e-d676-4a7e-8540-b66d012c0bf9" />
 
-## COMPLETE MODEL COMPARISON DASHBOARD
+## 🪟 COMPLETE MODEL COMPARISON DASHBOARD
 ```python
 # Create subplot grid (2 rows, 3 columns)
 fig, axes = plt.subplots(2, 3, figsize=(18, 12))
