@@ -9,6 +9,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
   <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/forestry.svg" width="40" alt="Random Forest"/>
   <img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/c2acbb5b-1a51-4d0a-8acc-e36b59775f29" />
+  <img src="https://github.com/user-attachments/assets/c2acbb5b-1a51-4d0a-8acc-e36b59775f29" width="40" alt="Custom Image"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
 
