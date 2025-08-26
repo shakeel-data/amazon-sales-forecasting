@@ -11,7 +11,8 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
 
-<img src="https://static.thenounproject.com/png/2424487-200.png" width="40" alt="KMeans Clustering"/>
+<img src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" width="40" alt="KMeans Clustering"/>
+<img width="501" height="501" alt="image" src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" />
 
 
 
