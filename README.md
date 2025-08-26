@@ -8,6 +8,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="60" alt="KMeans"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
   <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/forestry.svg" width="40" alt="Random Forest"/>
+  <img width="531" height="498" alt="image" src="https://github.com/user-attachments/assets/c2acbb5b-1a51-4d0a-8acc-e36b59775f29" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
 </p>
 
