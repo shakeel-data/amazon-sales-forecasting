@@ -1487,7 +1487,7 @@ print(f"\n Customer segmentation analysis completed! Data saved to 'customer_seg
 
 ## 💡 Key Insights & Business Impact
 
-| 🔍 Area                | 📊 Insight                                                                 | 🎯 Strategic Recommendation                                                                                 |
+|  Area                |  Insight                                                                 |  Strategic Recommendation                                                                                 |
 |------------------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
 | 📈 **Sales Performance** | Q4 sales are **35% higher** than other quarters due to seasonality.       | Optimize **inventory and marketing** spend in Q3 to prepare for Q4 surge.                                   |
 | 🛒 **Product Analysis**   | Premium organic products have the **highest margins (avg. 23%)**.        | Expand **premium product line** and feature these items in campaigns.                                       |
