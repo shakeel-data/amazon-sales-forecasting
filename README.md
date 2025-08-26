@@ -2,9 +2,8 @@
 
 <img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
 
-![Python](https://img.shields.io/badge/Python-3.9-blue.svg) ![SQL](https://img.shields.io/badge/SQL-BigQuery-orange.svg) ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2-brightgreen.svg) ![Prophet](https://img.shields.io/badge/Prophet-1.1-blueviolet.svg)
+
 <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
-![BigQuery](https://img.shields.io/badge/BigQuery-4285F4?style=for-the-badge&logo=googlebigquery&logoColor=white)
 
 Amazon Sales Forecasting is crucial for accurately predicting future customer demand. This allows for optimized inventory management, preventing costly overstocking and lost sales from stockouts. As a result, businesses can significantly reduce waste, improve cash flow, and maximize profitability. Simultaneously, Customer Analytics uncovers distinct purchasing behaviors and segments the customer base. This enables highly targeted marketing campaigns and personalized experiences, boosting customer loyalty and satisfaction. Ultimately, this dual approach empowers data-driven strategic decisions that drive sustainable growth.
 
