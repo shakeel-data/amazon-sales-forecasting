@@ -7,7 +7,7 @@
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="60" alt="KMeans"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
-  <img src="https://raw.githubusercontent.com/microsoft/LightGBM/master/docs/logo/LightGBM_logo_black_text.svg" width="150" alt="LightGBM"/>
+  <img src="https://raw.githubusercontent.com/microsoft/LightGBM/master/docs/logo/LightGBM_logo_black_text.svg" width="140" alt="LightGBM"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
   <img src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" width="40" alt="KMeans Clustering"/>
 </p>
