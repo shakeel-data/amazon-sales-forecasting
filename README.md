@@ -328,7 +328,7 @@ print("\n All normalized tables created and saved!")
 ### Solution 1
 **Set up GCP Credentials:**
 Place your service account key `.json` file in the root directory and update the notebook code to reference its path.
-```
+```python
 from google.cloud import bigquery
 import os
 
@@ -381,6 +381,7 @@ FROM `your-project-id.your-dataset-id.customers`
 result = client.query(test_query).to_dataframe()
 print(f"Test: Found {result.iloc[0]['customer_count']} customers")
 ```
+
 ### Solution 2
 Upload the normalized 4 tables manually to Google BigQuery to serve as the single source of truth for all subsequent analysis
 
