@@ -53,7 +53,6 @@ The project follows a structured, multi-stage workflow designed to transform raw
 | 4      | **Advanced SQL Analysis**     | Run 20+ **SQL queries** for cohort analysis, RFM scores, and deep business insights.                           |
 | 5      | **Machine Learning Modeling** | - **Forecasting:** Linear Regression, Random Forest, Prophet<br> - **Segmentation:** KMeans for customer groups |
 | 6      | **Insight & Strategy**        | Translate analytical findings into **strategic recommendations** for growth.                                   |
-
 ---
 
 ## 🔧 Project Workflow
