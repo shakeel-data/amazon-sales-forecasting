@@ -20,10 +20,10 @@ This project provides a full-stack analytics solution, beginning with raw data i
 - Kaggle
   <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon_foodcategory_sales.csv">csv</a>
 - Clean
-  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customers.csv">customers.csv</a>
-  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/orders.csv">orders.csv</a>
-  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/products.csv">products.csv</a>
-  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/sales.csv">sales.csv</a>
+  - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customers.csv">customers.csv</a>
+  - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/orders.csv">orders.csv</a>
+  - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/products.csv">products.csv</a>
+  - <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/sales.csv">sales.csv</a>
 - Python
   <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon_Sales_Forecasting.ipynb">codes</a>
 - Customer segment
