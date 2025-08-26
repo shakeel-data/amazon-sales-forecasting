@@ -1,20 +1,35 @@
 # 🛒 Amazon Sales Forecasting & Customer Analytics
 
-![Amazon Sales Forecasting Workflow](https://github.com/user-attachments/assets/cdb9ca79-b296-44dd-b167-41605929131b)
+<img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
 
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg) ![SQL](https://img.shields.io/badge/SQL-BigQuery-orange.svg) ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2-brightgreen.svg) ![Prophet](https://img.shields.io/badge/Prophet-1.1-blueviolet.svg)
 
-A comprehensive, end-to-end data analytics project that demonstrates advanced capabilities in sales forecasting, customer segmentation, and business intelligence using Amazon food category sales data.
+Amazon Sales Forecasting is crucial for accurately predicting future customer demand. This allows for optimized inventory management, preventing costly overstocking and lost sales from stockouts. As a result, businesses can significantly reduce waste, improve cash flow, and maximize profitability. Simultaneously, Customer Analytics uncovers distinct purchasing behaviors and segments the customer base. This enables highly targeted marketing campaigns and personalized experiences, boosting customer loyalty and satisfaction. Ultimately, this dual approach empowers data-driven strategic decisions that drive sustainable growth.
 
 ## 📋 Project Overview
 
 This project provides a full-stack analytics solution, beginning with raw data ingestion and concluding with actionable business strategies. It showcases a robust workflow that includes data cleaning, database normalization, advanced SQL querying, and the implementation of multiple machine learning models for both supervised and unsupervised tasks. The primary goal is to unlock data-driven insights to forecast future sales, understand customer behavior, and guide strategic decision-making.
 
-### 🎯 Business Objectives
+## 🎯 Business Objectives
 - **Forecast Future Sales**: Predict revenue trends using multiple robust ML models.
 - **Segment Customers**: Identify distinct customer personas based on purchasing behavior to enable targeted marketing.
 - **Analyze Performance**: Uncover sales patterns, seasonal impacts, and key growth drivers.
 - **Generate Strategic Insights**: Translate complex data into clear, actionable recommendations for business growth.
+
+## 📁 Data Sources
+- Kaggle
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon_foodcategory_sales.csv">csv</a>
+- Clean
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customers.csv">customers.csv</a>
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/orders.csv">orders.csv</a>
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/products.csv">products.csv</a>
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/sales.csv">sales.csv</a>
+- Python
+  <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/Amazon_Sales_Forecasting.ipynb">codes</a>
+- Customer segment
+<a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customer_segments.csv">csv</a>
+
+
 
 ## 🛠️ Tech Stack & Skills
 
