@@ -3,6 +3,7 @@
 <img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
 
 ![Python](https://img.shields.io/badge/Python-3.9-blue.svg) ![SQL](https://img.shields.io/badge/SQL-BigQuery-orange.svg) ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2-brightgreen.svg) ![Prophet](https://img.shields.io/badge/Prophet-1.1-blueviolet.svg)
+<img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
 
 Amazon Sales Forecasting is crucial for accurately predicting future customer demand. This allows for optimized inventory management, preventing costly overstocking and lost sales from stockouts. As a result, businesses can significantly reduce waste, improve cash flow, and maximize profitability. Simultaneously, Customer Analytics uncovers distinct purchasing behaviors and segments the customer base. This enables highly targeted marketing campaigns and personalized experiences, boosting customer loyalty and satisfaction. Ultimately, this dual approach empowers data-driven strategic decisions that drive sustainable growth.
 
@@ -324,7 +325,7 @@ print("\n All normalized tables created and saved!")
 ```
 <img width="1716" height="281" alt="image" src="https://github.com/user-attachments/assets/3ad32c3a-ab6b-4696-8d59-06efbba09f32" />
 
-## BigQuery Integration
+## 📦 BigQuery Integration
 ### Solution 1
 **Set up GCP Credentials:**
 Place your service account key `.json` file in the root directory and update the notebook code to reference its path.
@@ -1191,6 +1192,7 @@ plt.show()
 print("Key Insight: Random Forest significantly outperforms Linear Regression, indicating non-linear relationships in the data.")
 ```
 <img width="1489" height="1181" alt="image" src="https://github.com/user-attachments/assets/5ecd52df-fc10-45fd-946b-180f592c15db" />
+
 #### *Random Forest (Advanced)*
 - **Performance**: R² = 0.87, RMSE = $892
 - **Purpose**: Capture non-linear relationships
@@ -1266,6 +1268,7 @@ for _, row in future_predictions.head(6).iterrows():
 <img width="1254" height="701" alt="image" src="https://github.com/user-attachments/assets/f284568f-22ef-411a-ad5d-318bac4256e9" />
 <img width="887" height="590" alt="image" src="https://github.com/user-attachments/assets/a7985089-5d7e-446c-bc1e-4c902eeb17da" />
 <img width="1644" height="205" alt="image" src="https://github.com/user-attachments/assets/dad6543b-e462-4f3a-a918-4dd3a169e007" />
+
 #### *Facebook Prophet (Time-Series)*
 - **Performance**: 12-month forecast with seasonality
 - **Purpose**: Long-term forecasting with seasonal patterns
