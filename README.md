@@ -10,6 +10,10 @@
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
 </p>
 
+<p align="center">
+  <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
+  <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
+</p>
 
 
 
