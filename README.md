@@ -30,7 +30,7 @@ This project provides a full-stack analytics solution, beginning with raw data i
 <a href="https://github.com/shakeel-data/amazon-sales-forecasting/blob/main/customer_segments.csv">csv</a>
 
 ## 🔧 Project Workflow
-### 1. 📥 Load Packages and Data Ingestion
+### 📥 Load Packages and Data Ingestion
 ```python
 import pandas as pd
 import numpy as np
@@ -59,7 +59,7 @@ print(f"Dataset Shape: {df.shape}")
 ```
 <img width="1484" height="39" alt="image" src="https://github.com/user-attachments/assets/c7a5e4e5-d874-463a-857e-7adc23e7a4ea" />
 
-### Basic dataset information
+#### Basic dataset information
 ```python
 print("Column Names and Data Types:")
 print(df.dtypes)
@@ -112,6 +112,264 @@ df['Delivery_Days'] = (df['Promised Delivery Date'] - df['Invoice Date']).dt.day
 print("Feature engineering completed!")
 ```
 
+## Exploratory Data Analysis (EDA)
+```python
+# Set up the plotting area
+fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+fig.suptitle('Amazon Food Category Sales - Overview Dashboard', fontsize=16, fontweight='bold')
+
+# 1. Sales Trend Over Time
+monthly_sales = df.groupby('Month_Year')['Sales Amount'].sum().reset_index()
+monthly_sales['Month_Year'] = monthly_sales['Month_Year'].astype(str)
+
+axes[0,0].plot(monthly_sales['Month_Year'], monthly_sales['Sales Amount'],
+               marker='o', linewidth=2, markersize=6)
+axes[0,0].set_title('Monthly Sales Trend', fontweight='bold')
+axes[0,0].set_xlabel('Month')
+axes[0,0].set_ylabel('Sales Amount ($)')
+axes[0,0].tick_params(axis='x', rotation=45)
+axes[0,0].grid(True, alpha=0.3)
+
+# 2. Top 10 Products by Sales
+top_products = df.groupby('Item')['Sales Amount'].sum().nlargest(10)
+axes[0,1].barh(range(len(top_products)), top_products.values)
+axes[0,1].set_yticks(range(len(top_products)))
+axes[0,1].set_yticklabels([item[:20] + '...' if len(item) > 20 else item for item in top_products.index])
+axes[0,1].set_title('Top 10 Products by Sales', fontweight='bold')
+axes[0,1].set_xlabel('Sales Amount ($)')
+
+# 3. Sales by Item Class
+class_sales = df.groupby('Item Class')['Sales Amount'].sum().sort_values(ascending=False)
+axes[1,0].pie(class_sales.values, labels=class_sales.index, autopct='%1.1f%%', startangle=90)
+axes[1,0].set_title('Sales Distribution by Item Class', fontweight='bold')
+
+# 4. Sales Rep Performance
+rep_performance = df.groupby('Sales Rep')['Sales Amount'].sum().sort_values(ascending=False).head(10)
+axes[1,1].bar(range(len(rep_performance)), rep_performance.values)
+axes[1,1].set_xticks(range(len(rep_performance)))
+axes[1,1].set_xticklabels(rep_performance.index, rotation=45, ha='right')
+axes[1,1].set_title('Top 10 Sales Rep Performance', fontweight='bold')
+axes[1,1].set_ylabel('Sales Amount ($)')
+
+plt.tight_layout()
+plt.show()
+```
+<img width="1488" height="1180" alt="image" src="https://github.com/user-attachments/assets/3a01d229-4701-439a-9f02-428b65cb6b19" />
+
+### Correlation Heatmap
+```python
+# 5. Correlation Heatmap
+plt.figure(figsize=(12, 12))
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+correlation_matrix = df[numeric_cols].corr()
+
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0,
+            square=True, linewidths=0.5)
+plt.title('Correlation Matrix - Numeric Variables', fontweight='bold', pad=20)
+plt.tight_layout()
+plt.show()
+
+print("Key Insight: Strong correlation between Sales Amount and List Price indicates pricing strategy effectiveness.")
+```
+<img width="1144" height="1144" alt="image" src="https://github.com/user-attachments/assets/0d52bba1-855e-425b-88ca-645b15129820" />
+
+```python
+# 6. Seasonal Analysis
+plt.figure(figsize=(15, 5))
+
+# Monthly sales pattern
+plt.subplot(1, 3, 1)
+monthly_avg = df.groupby('Month')['Sales Amount'].mean()
+plt.bar(monthly_avg.index, monthly_avg.values)
+plt.title('Average Sales by Month', fontweight='bold')
+plt.xlabel('Month')
+plt.ylabel('Average Sales ($)')
+
+# Quarterly sales
+plt.subplot(1, 3, 2)
+quarterly_sales = df.groupby('Quarter')['Sales Amount'].sum()
+plt.bar(['Q1', 'Q2', 'Q3', 'Q4'], quarterly_sales.values)
+plt.title('Sales by Quarter', fontweight='bold')
+plt.xlabel('Quarter')
+plt.ylabel('Total Sales ($)')
+
+# Day of week pattern
+plt.subplot(1, 3, 3)
+dow_sales = df.groupby('Day_of_Week')['Sales Amount'].mean()
+days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+plt.bar(days, dow_sales.values)
+plt.title('Average Sales by Day of Week', fontweight='bold')
+plt.xlabel('Day of Week')
+plt.ylabel('Average Sales ($)')
+
+plt.tight_layout()
+plt.show()
+
+print("Key Insight: Clear seasonal patterns detected - Q4 shows highest sales, likely due to holiday shopping.")
+```
+<img width="1489" height="490" alt="image" src="https://github.com/user-attachments/assets/c9b0264e-04a6-44ac-97af-b7ab341a7e67" />
+
+
+```python
+# 7. Profit Margin Analysis
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+# Profit margin distribution
+plt.hist(df['Profit_Margin_Pct'].dropna(), bins=30, alpha=0.7, edgecolor='black')
+plt.title('Profit Margin Distribution', fontweight='bold')
+plt.xlabel('Profit Margin (%)')
+plt.ylabel('Frequency')
+plt.axvline(df['Profit_Margin_Pct'].mean(), color='red', linestyle='--',
+            label=f'Mean: {df["Profit_Margin_Pct"].mean():.1f}%')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+# Profit margin by product class
+class_margin = df.groupby('Item Class')['Profit_Margin_Pct'].mean().sort_values(ascending=False)
+plt.bar(range(len(class_margin)), class_margin.values)
+plt.xticks(range(len(class_margin)), class_margin.index, rotation=45, ha='right')
+plt.title('Average Profit Margin by Item Class', fontweight='bold')
+plt.ylabel('Profit Margin (%)')
+
+plt.tight_layout()
+plt.show()
+
+print("Key Insight: Average profit margin is healthy, but varies significantly by product class.")
+```
+<img width="1189" height="590" alt="image" src="https://github.com/user-attachments/assets/1febaa5f-ed12-44b1-8eab-0c3b4fda8e4c" />
+
+## Data Normalization and SQL Preparation
+```python
+# Create normalized tables for SQL analysis
+from faker import Faker
+fake = Faker()
+
+print("CREATING NORMALIZED DATABASE TABLES")
+print("=" * 45)
+
+# 1. Customers Table
+print("Creating customers table with fake names...")
+customers = df[['Custkey']].drop_duplicates().reset_index(drop=True)
+customers['customer_name'] = [fake.name() for _ in range(len(customers))]
+customers['email'] = [fake.email() for _ in range(len(customers))]
+customers['phone'] = [fake.phone_number() for _ in range(len(customers))]
+customers['address'] = [fake.address().replace('\n', ', ') for _ in range(len(customers))]
+customers['registration_date'] = [fake.date_between(start_date='-2y', end_date='today') for _ in range(len(customers))]
+
+print(f"Customers table: {customers.shape}")
+
+# 2. Products Table
+print("Creating products table...")
+products = df[['Item Number', 'Item', 'Item Class', 'List Price', 'U/M']].drop_duplicates().reset_index(drop=True)
+products.columns = ['product_id', 'product_name', 'category', 'list_price', 'unit_measure']
+
+print(f"Products table: {products.shape}")
+
+# 3. Orders Table
+print("Creating orders table...")
+orders = df[['Order Number', 'Custkey', 'Invoice Date', 'Promised Delivery Date', 'Sales Rep']].drop_duplicates().reset_index(drop=True)
+orders.columns = ['order_id', 'customer_id', 'order_date', 'promised_delivery', 'sales_rep']
+
+print(f"Orders table: {orders.shape}")
+
+# 4. Sales Table (fact table)
+print("Creating sales table...")
+sales = df[['Invoice Number', 'Order Number', 'Item Number', 'Line Number',
+             'Sales Quantity', 'Sales Price', 'Sales Amount', 'Discount Amount',
+             'Sales Cost Amount', 'Sales Margin Amount']].copy()
+sales.columns = ['invoice_number', 'order_id', 'product_id', 'line_number',
+                  'quantity', 'unit_price', 'sales_amount', 'discount_amount',
+                  'cost_amount', 'margin_amount']
+
+print(f"Sales table: {sales.shape}")
+
+# Save all tables
+import os
+os.makedirs('data/processed', exist_ok=True)
+customers.to_csv('data/processed/customers.csv', index=False)
+products.to_csv('data/processed/products.csv', index=False)
+orders.to_csv('data/processed/orders.csv', index=False)
+sales.to_csv('data/processed/sales.csv', index=False)
+
+print("\n All normalized tables created and saved!")
+```
+<img width="1716" height="281" alt="image" src="https://github.com/user-attachments/assets/3ad32c3a-ab6b-4696-8d59-06efbba09f32" />
+
+## BigQuery Integration
+### Solution 1
+**Set up GCP Credentials:**
+Place your service account key `.json` file in the root directory and update the notebook code to reference its path.
+```
+from google.cloud import bigquery
+import os
+
+# 1. SETUP (Update these 2 lines with your info)
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'your-json-file-path'
+client = bigquery.Client(project='your-project-id')
+
+# 2. SIMPLE FUNCTIONS
+def create_dataset():
+    dataset_id = 'your-dataset-id'
+    try:
+        client.get_dataset(dataset_id)
+        print("Dataset exists")
+    except:
+        dataset = bigquery.Dataset(f"{client.project}.{dataset_id}")
+        dataset.location = "US"
+        client.create_dataset(dataset, exists_ok=True)
+        print("Dataset created")
+
+def upload_table(df, table_name):
+    table_id = f"{client.project}.your-dataset-id.{table_name}"
+    job_config = bigquery.LoadJobConfig(
+        write_disposition="WRITE_TRUNCATE",
+        autodetect=True
+    )
+    job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
+    job.result()
+    print(f" {table_name}: {len(df)} rows uploaded")
+
+# 3. RUN IT
+print("Uploading to BigQuery...")
+
+# Create dataset
+create_dataset()
+
+# Upload your 4 tables (these should already exist from your previous code)
+upload_table(customers, 'customers')
+upload_table(products, 'products') 
+upload_table(orders, 'orders')
+upload_table(sales, 'sales')
+
+print("\n ALL DONE! Your tables are in BigQuery!")
+
+# 4. TEST IT
+test_query = """
+SELECT COUNT(*) as customer_count 
+FROM `your-project-id.your-dataset-id.customers`
+"""
+
+result = client.query(test_query).to_dataframe()
+print(f"Test: Found {result.iloc[0]['customer_count']} customers")
+```
+### Solution 2
+Upload the normalized 4 tables manually to Google BigQuery to serve as the single source of truth for all subsequent analysis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 📊 Project Workflow
 
@@ -157,8 +415,7 @@ cd amazon-sales-forecasting
 2. **Install dependencies:**
 pip install -r requirements.txt
 
-3. **Set up GCP Credentials:**
-Place your service account key `.json` file in the root directory and update the notebook code to reference its path.
+3. 
 
 4. **Run the Notebooks:**
 Execute in the following order:
