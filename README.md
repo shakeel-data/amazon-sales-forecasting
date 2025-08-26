@@ -1,4 +1,4 @@
-# 🛒 Amazon Sales Forecasting Project | Python + Big Query + Machine Learning
+# 📦 Amazon Sales Forecasting Project | Python + Big Query + Machine Learning
 
 <img width="1024" height="1024" alt="Google_AI_Studio_2025-08-25T16_26_46 072Z" src="https://github.com/user-attachments/assets/4f2a119d-bb1b-4b20-8cf7-a90c040e6f16" />
 
