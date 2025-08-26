@@ -9,10 +9,9 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/SCIPY_2.svg/256px-SCIPY_2.svg.png" width="40" alt="Linear Regression"/>
   <img src="https://github.com/user-attachments/assets/e35b27ca-31c4-423f-86d1-1ec31f3df60f" width="40" alt="Custom Image"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" width="40" alt="Facebook Prophet"/>
+  <img src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" width="40" alt="KMeans Clustering"/>
 </p>
 
-<img src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" width="40" alt="KMeans Clustering"/>
-<img width="501" height="501" alt="image" src="https://github.com/user-attachments/assets/f0afa392-f2ae-4df3-9c0e-20d7a90a72c4" />
 
 
 
