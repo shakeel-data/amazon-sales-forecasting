@@ -2,7 +2,7 @@
 
 <img width="2048" height="2048" alt="Google_AI_Studio_2025-08-26T16_55_52 752Z new" src="https://github.com/user-attachments/assets/86e5a2b1-37d4-41ae-8b67-67dd6c5f8159" />
 
-<p align="centre">
+<p align="center">
   <img src="https://www.vectorlogo.zone/logos/python/python-icon.svg" width="40"/>
   <img src="https://www.vectorlogo.zone/logos/google_bigquery/google_bigquery-icon.svg" width="40"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/320px-Scikit_learn_logo_small.svg.png" width="60" alt="KMeans"/>
