@@ -1,4 +1,4 @@
-# 📦 Amazon Product Demand Forecasting | Python + BigQuery + ML
+# 📦 Data-Driven Amazon Sales Forecasting & Insights | Python + BigQuery + ML
 
 <img width="2048" height="2048" alt="Google_AI_Studio_2025-08-26T16_55_52 752Z new" src="https://github.com/user-attachments/assets/86e5a2b1-37d4-41ae-8b67-67dd6c5f8159" />
 
